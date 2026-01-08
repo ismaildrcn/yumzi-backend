@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(name = "phone_number")
@@ -36,9 +37,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "gender", nullable = true)
     private Gender gender;
 
-    @Column(name = "birth_of_date")
+    @Column(name = "birth_of_date", nullable = true)
     private Date birthOfDate;
 
     @Column(name = "email_verified")

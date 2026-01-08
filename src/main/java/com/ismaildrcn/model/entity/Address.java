@@ -28,7 +28,7 @@ public class Address extends BaseEntity {
     @Column(name = "address_line_1")
     private String addressLine1;
 
-    @Column(name = "address_line_2")
+    @Column(name = "address_line_2", nullable = true)
     private String addressLine2;
 
     private String district;
