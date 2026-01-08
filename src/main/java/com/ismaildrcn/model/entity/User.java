@@ -11,6 +11,7 @@ import com.ismaildrcn.model.enums.Gender;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "phone_number_verified")
     private boolean phoneNumberVerified = false;
+
+    @OneToMany(mappedBy = "user")
+    private List<Address> address;
 
     // UserDetails implementation
     @Override
