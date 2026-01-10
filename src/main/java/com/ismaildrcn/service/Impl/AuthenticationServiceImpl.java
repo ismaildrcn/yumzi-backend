@@ -18,6 +18,7 @@ import com.ismaildrcn.jwt.JWTService;
 import com.ismaildrcn.model.dto.AuthRequest;
 import com.ismaildrcn.model.dto.AuthResponse;
 import com.ismaildrcn.model.dto.DtoUser;
+import com.ismaildrcn.model.dto.RefreshTokenRequest;
 import com.ismaildrcn.model.entity.RefreshToken;
 import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.RefreshTokenRepository;
@@ -71,6 +72,24 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         }
     }
 
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequest refreshToken) {
+        RefreshToken optRefreshToken = refreshTokenRepository
+                .findByRefreshToken(refreshToken.getRefreshToken()).orElseThrow(() -> new BaseException(
+                        new ErrorMessage(MessageType.REFRESH_TOKEN_NOT_FOUND, refreshToken.getRefreshToken())));
+
+        if (isTokenExpired(optRefreshToken)) {
+            throw new BaseException(
+                    new ErrorMessage(MessageType.REFRESH_TOKEN_IS_EXPIRED, refreshToken.getRefreshToken()));
+        }
+
+        User user = optRefreshToken.getUser();
+        String accessToken = jwtService.generateToken(user);
+        RefreshToken savedRefreshToken = refreshTokenRepository.save(createRefreshToken(user));
+
+        return new AuthResponse(accessToken, savedRefreshToken.getRefreshToken());
+    }
+
     private User createUserFromDto(AuthRequest authRequest) {
         User user = new User();
         user.setCreatedAt(new Date());
@@ -89,5 +108,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         refreshToken.setExpiredDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4));
         refreshToken.setRefreshToken(UUID.randomUUID().toString());
         return refreshToken;
+    }
+
+    private boolean isTokenExpired(RefreshToken refreshToken) {
+        return refreshToken.getExpiredDate().before(new Date());
     }
 }

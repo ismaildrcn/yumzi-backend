@@ -10,6 +10,7 @@ import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.AuthRequest;
 import com.ismaildrcn.model.dto.DtoUser;
+import com.ismaildrcn.model.dto.RefreshTokenRequest;
 import com.ismaildrcn.service.IAuthenticationService;
 
 import jakarta.validation.Valid;
@@ -30,6 +31,12 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
     @PostMapping("/authenticate")
     public RootEntity<?> authenticate(@Valid @RequestBody AuthRequest authRequest) {
         return ok(authenticationService.authenticate(authRequest));
+    }
+
+    @Override
+    @PostMapping("/refresh-token")
+    public RootEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ok(authenticationService.refreshToken(refreshTokenRequest));
     }
 
 }
