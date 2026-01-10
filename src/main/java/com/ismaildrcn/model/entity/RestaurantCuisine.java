@@ -9,12 +9,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "cuisines")
+@Table(name = "restaurant_cuisines")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Cuisine extends BaseEntity {
+public class RestaurantCuisine extends BaseEntity {
 
     private String name;
 

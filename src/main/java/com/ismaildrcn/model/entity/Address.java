@@ -4,8 +4,12 @@ import com.ismaildrcn.model.enums.AddressType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,8 +59,21 @@ public class Address extends BaseEntity {
     @Column(name = "is_active")
     private boolean isActive = true;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = true)
+    private Restaurant restaurant;
+
+    @PrePersist
+    @PreUpdate
+    private void validateOwner() {
+        if ((this.user == null && this.restaurant == null) ||
+                (this.user != null && this.restaurant != null)) {
+            throw new IllegalStateException("Address must belong to either a User or a Restaurant, but not both.");
+        }
+    }
 
 }
