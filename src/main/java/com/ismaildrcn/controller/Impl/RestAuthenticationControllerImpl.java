@@ -12,6 +12,8 @@ import com.ismaildrcn.model.dto.AuthRequest;
 import com.ismaildrcn.model.dto.DtoUser;
 import com.ismaildrcn.service.IAuthenticationService;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class RestAuthenticationControllerImpl extends RestBaseController implements IRestAuthenticationController {
 
@@ -22,6 +24,12 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
     @PostMapping("/register")
     public RootEntity<DtoUser> register(@RequestBody AuthRequest authRequest) {
         return ok(authenticationService.register(authRequest));
+    }
+
+    @Override
+    @PostMapping("/authenticate")
+    public RootEntity<?> authenticate(@Valid @RequestBody AuthRequest authRequest) {
+        return ok(authenticationService.authenticate(authRequest));
     }
 
 }

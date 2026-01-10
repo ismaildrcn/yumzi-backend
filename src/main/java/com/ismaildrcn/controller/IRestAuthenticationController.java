@@ -7,4 +7,6 @@ public interface IRestAuthenticationController {
 
     public RootEntity<DtoUser> register(AuthRequest authRequest);
 
+    public RootEntity<?> authenticate(AuthRequest authRequest);
+
 }

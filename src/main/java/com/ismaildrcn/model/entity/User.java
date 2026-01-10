@@ -81,9 +81,4 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
-    @Override
-    public boolean isEnabled() {
-        return emailVerified; // Email doğrulanmışsa hesap aktif
-    }
 }
