@@ -1,4 +1,4 @@
-package com.ismaildrcn.model.dto;
+package com.ismaildrcn.model.embeddable;
 
 import java.util.Map;
 

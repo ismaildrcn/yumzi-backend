@@ -6,8 +6,8 @@ import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import com.ismaildrcn.model.dto.BankAccounts;
-import com.ismaildrcn.model.dto.OpeningHours;
+import com.ismaildrcn.model.embeddable.BankAccounts;
+import com.ismaildrcn.model.embeddable.OpeningHours;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
