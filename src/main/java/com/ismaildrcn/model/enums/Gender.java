@@ -1,5 +1,15 @@
 package com.ismaildrcn.model.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Gender {
-    MALE, FEMALE, OTHER
+    MALE("MALE"), FEMALE("FEMALE"), OTHER("OTHER");
+
+    private final String value;
+
+    Gender(String value) {
+        this.value = value;
+    }
+
 }

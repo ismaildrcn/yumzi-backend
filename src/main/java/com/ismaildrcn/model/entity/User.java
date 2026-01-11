@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,6 +34,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "full_name")
@@ -44,11 +46,13 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "birth_of_date", nullable = true)
     private Date birthOfDate;
 
-    @Column(name = "email_verified")
-    private boolean emailVerified = false;
+    @ColumnDefault("false")
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
 
-    @Column(name = "phone_number_verified")
-    private boolean phoneNumberVerified = false;
+    @ColumnDefault("false")
+    @Column(name = "phone_number_verified", nullable = false)
+    private boolean phoneNumberVerified;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> address;

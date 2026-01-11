@@ -2,6 +2,9 @@ package com.ismaildrcn.model.entity;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +21,11 @@ public class BaseEntity {
     private Long id;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
 
     @Column(name = "deleted_at")

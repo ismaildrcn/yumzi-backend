@@ -10,10 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ismaildrcn.exception.BaseException;
-import com.ismaildrcn.exception.ErrorMessage;
-import com.ismaildrcn.exception.MessageType;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +24,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    // @Autowired
+    // @Qualifier("handlerExceptionResolver")
+    // private HandlerExceptionResolver exceptionResolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -59,13 +59,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
+            filterChain.doFilter(request, response);
         } catch (ExpiredJwtException ex) {
-            throw new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token));
+            // exceptionResolver.resolveException(request, response, null,
+            // new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token)));
         } catch (Exception e) {
-            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, e.getMessage()));
+            // exceptionResolver.resolveException(request, response, null,
+            // new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION,
+            // e.getMessage())));
         }
-
-        filterChain.doFilter(request, response);
     }
 
 }
