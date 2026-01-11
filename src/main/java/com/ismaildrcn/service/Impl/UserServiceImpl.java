@@ -47,6 +47,10 @@ public class UserServiceImpl implements IUserService {
         DtoUser dtoUser = new DtoUser();
         User user = getUserEntityById(id);
 
+        if (user.getEmail() != null && !user.getEmail().equals(dtoUserIU.getEmail())) {
+            user.setEmailVerified(false);
+        }
+
         BeanUtils.copyProperties(dtoUserIU, user);
         User updatedUser = userRepository.save(user);
 
