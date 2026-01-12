@@ -1,6 +1,6 @@
 package com.ismaildrcn.model.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +23,7 @@ public class RefreshToken extends BaseEntity {
     private String refreshToken;
 
     @Column(name = "expired_date")
-    private Date expiredDate;
+    private LocalDateTime expiredDate;
 
     @ManyToOne
     private User user;
