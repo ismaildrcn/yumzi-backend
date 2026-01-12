@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Order extends BaseEntity {
+    // Bir siparis kaydi
 
     @Column(name = "order_number", unique = true, nullable = false)
     private String orderNumber;

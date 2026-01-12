@@ -14,13 +14,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "cart_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class OrderItem extends BaseEntity {
-    // Siparis verilmis urunler
+public class CartItem extends BaseEntity {
+    // Henuz siparis verilmemis sepetteki urunler
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -43,11 +43,8 @@ public class OrderItem extends BaseEntity {
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @Column(name = "special_instructions")
+    @Column(name = "special_instructions", columnDefinition = "TEXT")
     private String specialInstructions;
-
-    @Column(name = "selected_options", columnDefinition = "JSONB")
-    private String selectedOptions;
 
     @Column(name = "calories")
     private Integer calories;
@@ -58,21 +55,15 @@ public class OrderItem extends BaseEntity {
     @Column(name = "is_spicy")
     private Boolean isSpicy = false;
 
-    @Column(name = "is_cancelled")
-    private Boolean isCancelled = false;
-
-    @Column(name = "rating")
-    private Integer rating;
-
-    @Column(name = "review")
-    private String review;
+    @Column(name = "is_available")
+    private Boolean isAvailable = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_item_id")
+    @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
 
 }
