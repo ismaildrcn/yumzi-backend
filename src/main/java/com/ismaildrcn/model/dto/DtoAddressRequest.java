@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressRequest {
+public class DtoAddressRequest {
 
     @NotNull(message = "Title cannot be null")
     private String title;
