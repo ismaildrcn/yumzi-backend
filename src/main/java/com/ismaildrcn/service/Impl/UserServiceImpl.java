@@ -1,6 +1,6 @@
 package com.ismaildrcn.service.Impl;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     public void deleteUserById(Long id) {
         User user = getUserEntityById(id);
 
-        user.setDeletedAt(new Date());
+        user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
     }
 

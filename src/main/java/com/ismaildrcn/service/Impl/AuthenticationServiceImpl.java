@@ -1,6 +1,6 @@
 package com.ismaildrcn.service.Impl;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,8 +92,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private User createUserFromDto(AuthRequest authRequest) {
         User user = new User();
-        user.setCreatedAt(new Date());
-        user.setUpdatedAt(new Date());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         user.setEmail(authRequest.getEmail());
         user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
@@ -104,13 +104,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
-        refreshToken.setCreatedAt(new Date());
-        refreshToken.setExpiredDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4));
+        refreshToken.setExpiredDate(LocalDateTime.now().plusHours(4));
         refreshToken.setRefreshToken(UUID.randomUUID().toString());
         return refreshToken;
     }
 
     private boolean isTokenExpired(RefreshToken refreshToken) {
-        return refreshToken.getExpiredDate().before(new Date());
+        return refreshToken.getExpiredDate().isBefore(LocalDateTime.now());
     }
 }
