@@ -1,13 +1,13 @@
 package com.ismaildrcn.service;
 
-import com.ismaildrcn.model.dto.DtoUser;
-import com.ismaildrcn.model.dto.DtoUserIU;
+import com.ismaildrcn.model.dto.DtoUserResponse;
+import com.ismaildrcn.model.dto.DtoUserRequest;
 
 public interface IUserService {
 
-    public DtoUser updateUserById(Long id, DtoUserIU dtoUserIU);
+    public DtoUserResponse updateUserById(Long id, DtoUserRequest dtoUserRequest);
 
-    public DtoUser getUserById(Long id);
+    public DtoUserResponse getUserById(Long id);
 
     public void deleteUserById(Long id);
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ismaildrcn.controller.IRestUserController;
 import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
-import com.ismaildrcn.model.dto.DtoUserIU;
+import com.ismaildrcn.model.dto.DtoUserRequest;
 import com.ismaildrcn.service.IUserService;
 
 import jakarta.validation.Valid;
@@ -39,8 +39,8 @@ public class RestUserControllerImpl extends RestBaseController implements IRestU
 
     @Override
     @PatchMapping("/{id}")
-    public RootEntity<?> updateUserById(@PathVariable Long id, @Valid @RequestBody DtoUserIU dtoUserIU) {
-        return ok(userService.updateUserById(id, dtoUserIU));
+    public RootEntity<?> updateUserById(@PathVariable Long id, @Valid @RequestBody DtoUserRequest dtoUserRequest) {
+        return ok(userService.updateUserById(id, dtoUserRequest));
     }
 
 }

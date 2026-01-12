@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
-import com.ismaildrcn.model.dto.DtoUser;
-import com.ismaildrcn.model.dto.DtoUserIU;
+import com.ismaildrcn.model.dto.DtoUserRequest;
+import com.ismaildrcn.model.dto.DtoUserResponse;
 import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.UserRepository;
 import com.ismaildrcn.service.IUserService;
@@ -30,8 +30,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public DtoUser getUserById(Long id) {
-        DtoUser dtoUser = new DtoUser();
+    public DtoUserResponse getUserById(Long id) {
+        DtoUserResponse dtoUser = new DtoUserResponse();
         User user = getUserEntityById(id);
 
         BeanUtils.copyProperties(user, dtoUser);
@@ -39,19 +39,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public DtoUser updateUserById(Long id, DtoUserIU dtoUserIU) {
-        return updateUserFromDto(id, dtoUserIU);
+    public DtoUserResponse updateUserById(Long id, DtoUserRequest dtoUserRequest) {
+        return updateUserFromDto(id, dtoUserRequest);
     }
 
-    private DtoUser updateUserFromDto(Long id, DtoUserIU dtoUserIU) {
-        DtoUser dtoUser = new DtoUser();
+    private DtoUserResponse updateUserFromDto(Long id, DtoUserRequest dtoUserRequest) {
+        DtoUserResponse dtoUser = new DtoUserResponse();
         User user = getUserEntityById(id);
 
-        if (user.getEmail() != null && !user.getEmail().equals(dtoUserIU.getEmail())) {
+        if (user.getEmail() != null && !user.getEmail().equals(dtoUserRequest.getEmail())) {
             user.setEmailVerified(false);
         }
 
-        BeanUtils.copyProperties(dtoUserIU, user);
+        BeanUtils.copyProperties(dtoUserRequest, user);
         User updatedUser = userRepository.save(user);
 
         BeanUtils.copyProperties(updatedUser, dtoUser);

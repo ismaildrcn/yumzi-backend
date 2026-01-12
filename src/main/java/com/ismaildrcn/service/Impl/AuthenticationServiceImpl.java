@@ -17,7 +17,7 @@ import com.ismaildrcn.exception.MessageType;
 import com.ismaildrcn.jwt.JWTService;
 import com.ismaildrcn.model.dto.AuthRequest;
 import com.ismaildrcn.model.dto.AuthResponse;
-import com.ismaildrcn.model.dto.DtoUser;
+import com.ismaildrcn.model.dto.DtoUserResponse;
 import com.ismaildrcn.model.dto.RefreshTokenRequest;
 import com.ismaildrcn.model.entity.RefreshToken;
 import com.ismaildrcn.model.entity.User;
@@ -44,8 +44,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Override
-    public DtoUser register(AuthRequest authRequest) {
-        DtoUser dtoUser = new DtoUser();
+    public DtoUserResponse register(AuthRequest authRequest) {
+        DtoUserResponse dtoUser = new DtoUserResponse();
         User dbUser = userRepository.save(createUserFromDto(authRequest));
 
         BeanUtils.copyProperties(dbUser, dtoUser);

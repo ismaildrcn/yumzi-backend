@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoUserIU {
+public class DtoUserRequest {
     @NotNull(message = "Email cannot be null")
     @Email(message = "Invalid email format")
     private String email;
