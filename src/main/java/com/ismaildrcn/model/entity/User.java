@@ -3,6 +3,7 @@ package com.ismaildrcn.model.entity;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +14,9 @@ import com.ismaildrcn.model.enums.Gender;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,12 +24,17 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_user_unique_id", columnList = "user_unique_id")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
+
+    @Column(name = "user_unique_id", unique = true, updatable = false, nullable = false)
+    private UUID userUniqueId;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -84,5 +92,12 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @PrePersist
+    private void generateUserUniqueId() {
+        if (this.userUniqueId == null) {
+            this.userUniqueId = UUID.randomUUID();
+        }
     }
 }

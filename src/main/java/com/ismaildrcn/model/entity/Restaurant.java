@@ -13,6 +13,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -24,7 +25,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants", indexes = {
+        @Index(name = "idx_restaurants_category_id", columnList = "category_id"),
+        @Index(name = "idx_restaurants_cuisine_id", columnList = "cuisine_id")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

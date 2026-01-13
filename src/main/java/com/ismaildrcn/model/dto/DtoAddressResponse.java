@@ -1,5 +1,9 @@
 package com.ismaildrcn.model.dto;
 
+import java.util.UUID;
+
+import com.ismaildrcn.model.enums.AddressType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,13 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoAddressResponse {
 
-    private Long id;
-
-    private Long userId;
+    private UUID addressUniqueId;
 
     private String title;
 
-    private String addressType;
+    private AddressType addressType;
 
     private String addressLine1;
 

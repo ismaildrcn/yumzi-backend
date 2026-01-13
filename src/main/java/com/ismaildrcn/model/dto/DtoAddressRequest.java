@@ -1,5 +1,7 @@
 package com.ismaildrcn.model.dto;
 
+import com.ismaildrcn.model.enums.AddressType;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,7 +18,7 @@ public class DtoAddressRequest {
     private String title;
 
     @NotNull(message = "Address type cannot be null")
-    private String addressType;
+    private AddressType addressType;
 
     @NotNull(message = "Address line 1 cannot be null")
     @Size(min = 5, max = 255, message = "Address line 1 must be between 5 and 255 characters")

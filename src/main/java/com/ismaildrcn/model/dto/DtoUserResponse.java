@@ -2,6 +2,7 @@ package com.ismaildrcn.model.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.ismaildrcn.model.entity.Address;
 import com.ismaildrcn.model.entity.Order;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoUserResponse {
 
-    private Long id;
+    private UUID userUniqueId;
 
     private String email;
 
