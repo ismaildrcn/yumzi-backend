@@ -17,4 +17,6 @@ public interface IAddressService {
 
     public DtoAddressResponse updateAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
 
+    public void deleteAddressByUniqueId(UUID uniqueId);
+
 }

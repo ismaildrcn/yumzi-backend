@@ -8,12 +8,14 @@ import com.ismaildrcn.model.dto.DtoAddressResponse;
 
 public interface IRestAddressController {
 
-    public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(UUID uniqueId);
+        public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(UUID uniqueId);
 
-    public RootEntity<DtoAddressResponse> saveAddressByUniqueId(UUID uniqueId,
-            DtoAddressRequest dtoAddressRequest);
+        public RootEntity<DtoAddressResponse> saveAddressByUniqueId(UUID uniqueId,
+                        DtoAddressRequest dtoAddressRequest);
 
-    public RootEntity<DtoAddressResponse> updateAddressByUniqueId(UUID uniqueId,
-            DtoAddressRequest dtoAddressRequest);
+        public RootEntity<DtoAddressResponse> updateAddressByUniqueId(UUID uniqueId,
+                        DtoAddressRequest dtoAddressRequest);
+
+        public RootEntity<String> deleteAddressByUniqueId(UUID uniqueId);
 
 }

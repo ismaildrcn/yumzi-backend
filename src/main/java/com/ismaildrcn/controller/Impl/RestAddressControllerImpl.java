@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,13 @@ public class RestAddressControllerImpl extends RestBaseController implements IRe
     public RootEntity<DtoAddressResponse> updateAddressByUniqueId(@PathVariable UUID uniqueAddressId,
             @RequestBody DtoAddressRequest dtoAddressRequest) {
         return ok(addressService.updateAddressByUniqueId(uniqueAddressId, dtoAddressRequest));
+    }
+
+    @Override
+    @DeleteMapping("/delete/{uniqueId}")
+    public RootEntity<String> deleteAddressByUniqueId(@PathVariable UUID uniqueId) {
+        addressService.deleteAddressByUniqueId(uniqueId);
+        return ok("Deletion successful.");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ismaildrcn.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -79,6 +80,13 @@ public class AddressServiceImpl implements IAddressService {
         BeanUtils.copyProperties(updatedAddress, dtoAddressResponse);
 
         return dtoAddressResponse;
+    }
+
+    @Override
+    public void deleteAddressByUniqueId(UUID uniqueId) {
+        Address address = getAddressEntityByUniqueId(uniqueId);
+        address.setDeletedAt(LocalDateTime.now());
+        addressRepository.save(address);
     }
 
     private Address getAddressEntityByUniqueId(UUID uniqueId) {

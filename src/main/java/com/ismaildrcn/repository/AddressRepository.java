@@ -15,21 +15,21 @@ import com.ismaildrcn.model.entity.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :uniqueId ORDER BY a.isDefault DESC")
-    List<Address> findAllAddressByUniqueId(UUID uniqueId);
+        @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :uniqueId AND a.deletedAt IS NULL ORDER BY a.isDefault DESC")
+        List<Address> findAllAddressByUniqueId(UUID uniqueId);
 
-    @Query("SELECT a FROM Address a WHERE a.uniqueId = :uniqueId")
-    Optional<Address> findByUniqueId(UUID uniqueId);
+        @Query("SELECT a FROM Address a WHERE a.uniqueId = :uniqueId AND a.deletedAt IS NULL")
+        Optional<Address> findByUniqueId(UUID uniqueId);
 
-    @Modifying
-    @Query("""
-                UPDATE Address a
-                SET a.isDefault = false
-                WHERE a.user.uniqueId = :userId
-                  AND a.uniqueId <> :addressId
-            """)
-    void unsetOtherDefaults(
-            @Param("userId") UUID userId,
-            @Param("addressId") UUID addressId);
+        @Modifying
+        @Query("""
+                            UPDATE Address a
+                            SET a.isDefault = false
+                            WHERE a.user.uniqueId = :userId
+                              AND a.uniqueId <> :addressId
+                        """)
+        void unsetOtherDefaults(
+                        @Param("userId") UUID userId,
+                        @Param("addressId") UUID addressId);
 
 }
