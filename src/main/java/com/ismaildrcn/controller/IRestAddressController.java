@@ -13,4 +13,7 @@ public interface IRestAddressController {
     public RootEntity<DtoAddressResponse> saveAddressByUniqueId(UUID uniqueId,
             DtoAddressRequest dtoAddressRequest);
 
+    public RootEntity<DtoAddressResponse> updateAddressByUniqueId(UUID uniqueId,
+            DtoAddressRequest dtoAddressRequest);
+
 }

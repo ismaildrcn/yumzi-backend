@@ -15,4 +15,6 @@ public interface IAddressService {
 
     public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
 
+    public DtoAddressResponse updateAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
+
 }

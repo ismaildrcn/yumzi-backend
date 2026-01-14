@@ -19,6 +19,8 @@ import com.ismaildrcn.repository.AddressRepository;
 import com.ismaildrcn.repository.UserRepository;
 import com.ismaildrcn.service.IAddressService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AddressServiceImpl implements IAddressService {
 
@@ -42,10 +44,15 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
+    @Transactional
     public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest) {
         DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
         User userDbObject = userRepository.findByUniqueId(uniqueId).orElseThrow(
                 () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId)));
+
+        if (Boolean.TRUE.equals(dtoAddressRequest.isDefault())) {
+            addressRepository.unsetOtherDefaults(userDbObject.getUniqueId(), uniqueId);
+        }
 
         Address address = createAddressFromDto(dtoAddressRequest);
 
@@ -56,6 +63,27 @@ public class AddressServiceImpl implements IAddressService {
         BeanUtils.copyProperties(savedAddress, dtoAddressResponse);
         return dtoAddressResponse;
 
+    }
+
+    @Override
+    @Transactional
+    public DtoAddressResponse updateAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest) {
+        Address address = getAddressEntityByUniqueId(uniqueId);
+        if (Boolean.TRUE.equals(address.isDefault()) || Boolean.TRUE.equals(dtoAddressRequest.isDefault())) {
+            addressRepository.unsetOtherDefaults(address.getUser().getUniqueId(), address.getUniqueId());
+        }
+        BeanUtils.copyProperties(dtoAddressRequest, address);
+        Address updatedAddress = addressRepository.save(address);
+
+        DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
+        BeanUtils.copyProperties(updatedAddress, dtoAddressResponse);
+
+        return dtoAddressResponse;
+    }
+
+    private Address getAddressEntityByUniqueId(UUID uniqueId) {
+        return addressRepository.findByUniqueId(uniqueId).orElseThrow(() -> new BaseException(
+                new ErrorMessage(MessageType.NO_RECORD_FOUND, "Address Id: " + uniqueId)));
     }
 
     private Address createAddressFromDto(DtoAddressRequest dtoAddressRequest) {
