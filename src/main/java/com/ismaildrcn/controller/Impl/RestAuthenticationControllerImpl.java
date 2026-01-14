@@ -9,7 +9,7 @@ import com.ismaildrcn.controller.IRestAuthenticationController;
 import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.AuthRequest;
-import com.ismaildrcn.model.dto.DtoUser;
+import com.ismaildrcn.model.dto.DtoUserResponse;
 import com.ismaildrcn.model.dto.RefreshTokenRequest;
 import com.ismaildrcn.service.IAuthenticationService;
 
@@ -23,7 +23,7 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
 
     @Override
     @PostMapping("/register")
-    public RootEntity<DtoUser> register(@RequestBody AuthRequest authRequest) {
+    public RootEntity<DtoUserResponse> register(@RequestBody AuthRequest authRequest) {
         return ok(authenticationService.register(authRequest));
     }
 

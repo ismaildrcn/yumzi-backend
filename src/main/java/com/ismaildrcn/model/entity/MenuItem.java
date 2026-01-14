@@ -12,6 +12,7 @@ import com.ismaildrcn.model.enums.CurrencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +22,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "menu_items")
+@Table(name = "menu_items", indexes = {
+        @Index(name = "idx_menu_items_restaurant_id", columnList = "restaurant_id"),
+        @Index(name = "idx_menu_items_category_id", columnList = "category_id")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

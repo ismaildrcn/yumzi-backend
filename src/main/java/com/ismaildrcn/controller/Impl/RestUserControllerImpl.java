@@ -1,5 +1,7 @@
 package com.ismaildrcn.controller.Impl;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ismaildrcn.controller.IRestUserController;
 import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
-import com.ismaildrcn.model.dto.DtoUserIU;
+import com.ismaildrcn.model.dto.DtoUserRequest;
 import com.ismaildrcn.service.IUserService;
 
 import jakarta.validation.Valid;
@@ -25,22 +27,23 @@ public class RestUserControllerImpl extends RestBaseController implements IRestU
     private IUserService userService;
 
     @Override
-    @DeleteMapping("/{id}")
-    public RootEntity<?> deleteUserById(@PathVariable Long id) {
-        userService.deleteUserById(id);
+    @DeleteMapping("/{uniqueId}")
+    public RootEntity<?> deleteUserByUniqueId(@PathVariable UUID uniqueId) {
+        userService.deleteUserByUniqueId(uniqueId);
         return ok("User deleted successfully.");
     }
 
     @Override
-    @GetMapping("/{id}")
-    public RootEntity<?> getUserById(@PathVariable Long id) {
-        return ok(userService.getUserById(id));
+    @GetMapping("/{uniqueId}")
+    public RootEntity<?> getUserByUniqueId(@PathVariable UUID uniqueId) {
+        return ok(userService.getUserByUniqueId(uniqueId));
     }
 
     @Override
-    @PatchMapping("/{id}")
-    public RootEntity<?> updateUserById(@PathVariable Long id, @Valid @RequestBody DtoUserIU dtoUserIU) {
-        return ok(userService.updateUserById(id, dtoUserIU));
+    @PatchMapping("/{uniqueId}")
+    public RootEntity<?> updateUserByUniqueId(@PathVariable UUID uniqueId,
+            @Valid @RequestBody DtoUserRequest dtoUserRequest) {
+        return ok(userService.updateUserByUniqueId(uniqueId, dtoUserRequest));
     }
 
 }

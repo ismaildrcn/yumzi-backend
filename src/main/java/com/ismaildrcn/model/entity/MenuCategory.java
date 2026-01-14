@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -16,7 +17,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "menu_categories")
+@Table(name = "menu_categories", indexes = {
+        @Index(name = "idx_menu_categories_restaurant_id", columnList = "restaurant_id")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

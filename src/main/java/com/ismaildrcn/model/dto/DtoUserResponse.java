@@ -2,8 +2,8 @@ package com.ismaildrcn.model.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-import com.ismaildrcn.model.entity.Address;
 import com.ismaildrcn.model.entity.Order;
 import com.ismaildrcn.model.enums.Gender;
 
@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoUser {
+public class DtoUserResponse {
 
-    private Long id;
+    private UUID uniqueId;
 
     private String email;
 
@@ -32,7 +32,7 @@ public class DtoUser {
 
     private boolean phoneNumberVerified = false;
 
-    private List<Address> address;
+    private List<DtoAddressResponse> address;
 
     private List<Order> orders;
 

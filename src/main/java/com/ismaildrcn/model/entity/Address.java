@@ -4,7 +4,10 @@ import com.ismaildrcn.model.enums.AddressType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -17,7 +20,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "addresses", indexes = {
+        @Index(name = "idx_addresses_user_id", columnList = "user_id"),
+        @Index(name = "idx_addresses_restaurant_id", columnList = "restaurant_id"),
+        @Index(name = "idx_addresses_unique_id", columnList = "address_unique_id")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +33,7 @@ public class Address extends BaseEntity {
 
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "address_type")
     private AddressType addressType;
 
@@ -68,12 +76,19 @@ public class Address extends BaseEntity {
     private Restaurant restaurant;
 
     @PrePersist
+    private void prePersist() {
+        validateOwner();
+    }
+
     @PreUpdate
+    private void preUpdate() {
+        validateOwner();
+    }
+
     private void validateOwner() {
         if ((this.user == null && this.restaurant == null) ||
                 (this.user != null && this.restaurant != null)) {
             throw new IllegalStateException("Address must belong to either a User or a Restaurant, but not both.");
         }
     }
-
 }
