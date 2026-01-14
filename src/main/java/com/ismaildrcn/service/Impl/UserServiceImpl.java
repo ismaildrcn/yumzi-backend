@@ -1,6 +1,9 @@
 package com.ismaildrcn.service.Impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
+import com.ismaildrcn.model.dto.DtoAddressResponse;
 import com.ismaildrcn.model.dto.DtoUserRequest;
 import com.ismaildrcn.model.dto.DtoUserResponse;
 import com.ismaildrcn.model.entity.User;
@@ -22,30 +26,37 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public void deleteUserById(Long id) {
-        User user = getUserEntityById(id);
+    public void deleteUserByUniqueId(UUID uniqueId) {
+        User user = getUserEntityById(uniqueId);
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
     }
 
     @Override
-    public DtoUserResponse getUserById(Long id) {
+    public DtoUserResponse getUserByUniqueId(UUID uniqueId) {
         DtoUserResponse dtoUser = new DtoUserResponse();
-        User user = getUserEntityById(id);
-
+        List<DtoAddressResponse> dtoAddress = new ArrayList<>();
+        User user = getUserEntityById(uniqueId);
         BeanUtils.copyProperties(user, dtoUser);
+
+        for (var address : user.getAddress()) {
+            DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
+            BeanUtils.copyProperties(address, dtoAddressResponse);
+            dtoAddress.add(dtoAddressResponse);
+        }
+        dtoUser.setAddress(dtoAddress);
         return dtoUser;
     }
 
     @Override
-    public DtoUserResponse updateUserById(Long id, DtoUserRequest dtoUserRequest) {
-        return updateUserFromDto(id, dtoUserRequest);
+    public DtoUserResponse updateUserByUniqueId(UUID uniqueId, DtoUserRequest dtoUserRequest) {
+        return updateUserFromDto(uniqueId, dtoUserRequest);
     }
 
-    private DtoUserResponse updateUserFromDto(Long id, DtoUserRequest dtoUserRequest) {
+    private DtoUserResponse updateUserFromDto(UUID uniqueId, DtoUserRequest dtoUserRequest) {
         DtoUserResponse dtoUser = new DtoUserResponse();
-        User user = getUserEntityById(id);
+        User user = getUserEntityById(uniqueId);
 
         if (user.getEmail() != null && !user.getEmail().equals(dtoUserRequest.getEmail())) {
             user.setEmailVerified(false);
@@ -59,11 +70,12 @@ public class UserServiceImpl implements IUserService {
         return dtoUser;
     }
 
-    private User getUserEntityById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + id)));
+    private User getUserEntityById(UUID uniqueId) {
+        User user = userRepository.findByUniqueId(uniqueId)
+                .orElseThrow(
+                        () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId)));
         if (user.getDeletedAt() != null) {
-            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + id));
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId));
         }
         return user;
     }

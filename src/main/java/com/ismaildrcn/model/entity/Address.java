@@ -1,7 +1,5 @@
 package com.ismaildrcn.model.entity;
 
-import java.util.UUID;
-
 import com.ismaildrcn.model.enums.AddressType;
 
 import jakarta.persistence.Column;
@@ -32,9 +30,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Address extends BaseEntity {
-
-    @Column(name = "address_unique_id", unique = true, updatable = false, nullable = false)
-    private UUID addressUniqueId;
 
     private String title;
 
@@ -83,7 +78,6 @@ public class Address extends BaseEntity {
     @PrePersist
     private void prePersist() {
         validateOwner();
-        generateAddressUniqueId();
     }
 
     @PreUpdate
@@ -97,11 +91,4 @@ public class Address extends BaseEntity {
             throw new IllegalStateException("Address must belong to either a User or a Restaurant, but not both.");
         }
     }
-
-    private void generateAddressUniqueId() {
-        if (this.addressUniqueId == null) {
-            this.addressUniqueId = UUID.randomUUID();
-        }
-    }
-
 }

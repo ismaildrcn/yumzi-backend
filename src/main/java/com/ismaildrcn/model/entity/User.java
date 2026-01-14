@@ -3,7 +3,6 @@ package com.ismaildrcn.model.entity;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +15,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,9 +30,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
-
-    @Column(name = "user_unique_id", unique = true, updatable = false, nullable = false)
-    private UUID userUniqueId;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -94,10 +89,4 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    @PrePersist
-    private void generateUserUniqueId() {
-        if (this.userUniqueId == null) {
-            this.userUniqueId = UUID.randomUUID();
-        }
-    }
 }

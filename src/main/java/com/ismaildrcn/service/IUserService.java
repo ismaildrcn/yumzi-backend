@@ -1,14 +1,15 @@
 package com.ismaildrcn.service;
 
+import java.util.UUID;
+
 import com.ismaildrcn.model.dto.DtoUserRequest;
 import com.ismaildrcn.model.dto.DtoUserResponse;
 
 public interface IUserService {
 
-    public DtoUserResponse updateUserById(Long id, DtoUserRequest dtoUserRequest);
+    public DtoUserResponse updateUserByUniqueId(UUID uniqueId, DtoUserRequest dtoUserRequest);
 
-    public DtoUserResponse getUserById(Long id);
+    public DtoUserResponse getUserByUniqueId(UUID uniqueId);
 
-    public void deleteUserById(Long id);
-
+    public void deleteUserByUniqueId(UUID uniqueId);
 }

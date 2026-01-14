@@ -11,8 +11,8 @@ import com.ismaildrcn.model.dto.DtoAddressResponse;
 @Service
 public interface IAddressService {
 
-    public List<DtoAddressResponse> findAllAddressByUserUniqueId(UUID userUniqueId);
+    public List<DtoAddressResponse> findAllAddressByUniqueId(UUID uniqueId);
 
-    public DtoAddressResponse saveAddressByUserUniqueId(UUID userUniqueId, DtoAddressRequest dtoAddressRequest);
+    public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
 
 }

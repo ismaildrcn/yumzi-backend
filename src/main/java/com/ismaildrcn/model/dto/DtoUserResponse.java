@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.ismaildrcn.model.entity.Address;
 import com.ismaildrcn.model.entity.Order;
 import com.ismaildrcn.model.enums.Gender;
 
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoUserResponse {
 
-    private UUID userUniqueId;
+    private UUID uniqueId;
 
     private String email;
 
@@ -33,7 +32,7 @@ public class DtoUserResponse {
 
     private boolean phoneNumberVerified = false;
 
-    private List<Address> address;
+    private List<DtoAddressResponse> address;
 
     private List<Order> orders;
 

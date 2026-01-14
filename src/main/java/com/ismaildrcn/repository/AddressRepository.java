@@ -12,7 +12,7 @@ import com.ismaildrcn.model.entity.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    @Query("SELECT a FROM Address a WHERE a.user.userUniqueId = :userUniqueId")
-    List<Address> findAllAddressByUserUniqueId(UUID userUniqueId);
+    @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :uniqueId")
+    List<Address> findAllAddressByUniqueId(UUID uniqueId);
 
 }

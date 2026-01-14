@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoAddressResponse {
 
-    private UUID addressUniqueId;
+    private UUID uniqueId;
 
     private String title;
 

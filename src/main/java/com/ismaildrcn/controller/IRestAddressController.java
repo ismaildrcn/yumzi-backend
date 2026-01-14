@@ -8,9 +8,9 @@ import com.ismaildrcn.model.dto.DtoAddressResponse;
 
 public interface IRestAddressController {
 
-    public RootEntity<List<DtoAddressResponse>> findAllAddressByUserUniqueId(UUID userUniqueId);
+    public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(UUID uniqueId);
 
-    public RootEntity<DtoAddressResponse> saveAddressByUserUniqueId(UUID userUniqueId,
+    public RootEntity<DtoAddressResponse> saveAddressByUniqueId(UUID uniqueId,
             DtoAddressRequest dtoAddressRequest);
 
 }

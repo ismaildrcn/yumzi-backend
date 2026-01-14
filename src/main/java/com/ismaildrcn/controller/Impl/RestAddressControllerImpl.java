@@ -26,17 +26,17 @@ public class RestAddressControllerImpl extends RestBaseController implements IRe
     private IAddressService addressService;
 
     @Override
-    @GetMapping("/list/{userUniqueId}")
-    public RootEntity<List<DtoAddressResponse>> findAllAddressByUserUniqueId(@PathVariable UUID userUniqueId) {
-        return ok(addressService.findAllAddressByUserUniqueId(userUniqueId));
+    @GetMapping("/list/{uniqueId}")
+    public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(@PathVariable UUID uniqueId) {
+        return ok(addressService.findAllAddressByUniqueId(uniqueId));
     }
 
     @Override
-    @PostMapping("/save/{userUniqueId}")
-    public RootEntity<DtoAddressResponse> saveAddressByUserUniqueId(
-            @PathVariable UUID userUniqueId,
+    @PostMapping("/save/{uniqueId}")
+    public RootEntity<DtoAddressResponse> saveAddressByUniqueId(
+            @PathVariable UUID uniqueId,
             @RequestBody DtoAddressRequest dtoAddressRequest) {
-        return ok(addressService.saveAddressByUserUniqueId(userUniqueId, dtoAddressRequest));
+        return ok(addressService.saveAddressByUniqueId(uniqueId, dtoAddressRequest));
     }
 
 }

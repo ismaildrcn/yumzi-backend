@@ -29,9 +29,9 @@ public class AddressServiceImpl implements IAddressService {
     private UserRepository userRepository;
 
     @Override
-    public List<DtoAddressResponse> findAllAddressByUserUniqueId(UUID userUniqueId) {
+    public List<DtoAddressResponse> findAllAddressByUniqueId(UUID uniqueId) {
         List<DtoAddressResponse> dtoAddressResponses = new ArrayList<>();
-        List<Address> allAddressFromDb = addressRepository.findAllAddressByUserUniqueId(userUniqueId);
+        List<Address> allAddressFromDb = addressRepository.findAllAddressByUniqueId(uniqueId);
 
         for (Address address : allAddressFromDb) {
             DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
@@ -42,10 +42,10 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
-    public DtoAddressResponse saveAddressByUserUniqueId(UUID userUniqueId, DtoAddressRequest dtoAddressRequest) {
+    public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest) {
         DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
-        User userDbObject = userRepository.findByUserUniqueId(userUniqueId).orElseThrow(
-                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + userUniqueId)));
+        User userDbObject = userRepository.findByUniqueId(uniqueId).orElseThrow(
+                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId)));
 
         Address address = createAddressFromDto(dtoAddressRequest);
 
