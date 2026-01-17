@@ -1,15 +1,13 @@
 package com.ismaildrcn.utils;
 
-import com.github.slugify.Slugify;
-
 public class SlugUtils {
 
     public static String generateSlug(String text) {
-        Slugify slugify = Slugify.builder()
-                .transliterator(true)
-                .customReplacement("'", "")
-                .build();
-        return slugify.slugify(text);
+        text = text.toLowerCase();
+        text = text.replaceAll("[^a-z0-9\\s-]", "");
+        text = text.replaceAll("[\\s-]+", " ").trim();
+        text = text.replaceAll("\\s", "-");
+        return text;
     }
 
 }
