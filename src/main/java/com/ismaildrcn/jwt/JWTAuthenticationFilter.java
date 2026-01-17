@@ -3,12 +3,18 @@ package com.ismaildrcn.jwt;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import com.ismaildrcn.exception.BaseException;
+import com.ismaildrcn.exception.ErrorMessage;
+import com.ismaildrcn.exception.MessageType;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -25,9 +31,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    // @Autowired
-    // @Qualifier("handlerExceptionResolver")
-    // private HandlerExceptionResolver exceptionResolver;
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver exceptionResolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -61,12 +67,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException ex) {
-            // exceptionResolver.resolveException(request, response, null,
-            // new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token)));
+            exceptionResolver.resolveException(request, response, null,
+                    new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token)));
         } catch (Exception e) {
-            // exceptionResolver.resolveException(request, response, null,
-            // new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION,
-            // e.getMessage())));
+            exceptionResolver.resolveException(request, response, null,
+                    new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION,
+                            e.getMessage())));
         }
     }
 

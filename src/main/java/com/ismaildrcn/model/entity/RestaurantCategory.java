@@ -1,7 +1,11 @@
 package com.ismaildrcn.model.entity;
 
+import com.ismaildrcn.utils.SlugUtils;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,9 +30,15 @@ public class RestaurantCategory extends BaseEntity {
     private String iconUrl;
 
     @Column(name = "sort_order")
-    private Integer sortOrder = 0;
+    private Integer sortOrder;
 
     @Column(name = "is_active")
     private boolean isActive = true;
+
+    @PrePersist
+    @PreUpdate
+    private void generatedSlugFromName() {
+        this.slug = SlugUtils.generateSlug(this.name);
+    }
 
 }

@@ -11,6 +11,7 @@ public enum MessageType {
     USERNAME_OR_PASSWORD_INVALID("1004", "Username or password is invalid."),
     REFRESH_TOKEN_NOT_FOUND("1005", "Refresh token not found."),
     REFRESH_TOKEN_IS_EXPIRED("1006", "The refresh token has expired."),
+    ALREADY_EXISTS_RECORD("1007", "The record already exists."),
     GENERAL_EXCEPTION("9999", "An error occurred while processing your request.");
 
     private String code;

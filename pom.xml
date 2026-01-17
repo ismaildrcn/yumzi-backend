@@ -30,7 +30,6 @@
 		<java.version>25</java.version>
 	</properties>
 	<dependencies>
-
 		<dependency>
 			<groupId>io.hypersistence</groupId>
 			<artifactId>hypersistence-utils-hibernate-71</artifactId>
