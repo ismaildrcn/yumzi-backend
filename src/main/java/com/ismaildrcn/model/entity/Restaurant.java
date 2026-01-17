@@ -34,6 +34,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Restaurant extends BaseEntity {
+
     private String name;
 
     private String slug;
@@ -46,17 +47,6 @@ public class Restaurant extends BaseEntity {
     private String email;
 
     private String website;
-
-    @OneToOne(mappedBy = "restaurant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Address address;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private RestaurantCategory category;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuisine_id")
-    private RestaurantCuisine cuisine;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "opening_hours", columnDefinition = "jsonb")
@@ -103,6 +93,20 @@ public class Restaurant extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "bank_account_info", columnDefinition = "jsonb")
     private BankAccounts bankAccountInfo;
+
+    @OneToOne(mappedBy = "restaurant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private RestaurantCategory category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuisine_id")
+    private RestaurantCuisine cuisine;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuisine_id")
 
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;
