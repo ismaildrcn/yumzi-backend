@@ -105,9 +105,6 @@ public class Restaurant extends BaseEntity {
     @JoinColumn(name = "cuisine_id")
     private RestaurantCuisine cuisine;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuisine_id")
-
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;
 }
