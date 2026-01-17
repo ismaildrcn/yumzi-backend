@@ -30,7 +30,7 @@ public class RestaurantCategory extends BaseEntity {
     private String iconUrl;
 
     @Column(name = "sort_order")
-    private Integer sortOrder = 0;
+    private Integer sortOrder;
 
     @Column(name = "is_active")
     private boolean isActive = true;
