@@ -8,6 +8,7 @@ import org.hibernate.type.SqlTypes;
 
 import com.ismaildrcn.model.embeddable.BankAccounts;
 import com.ismaildrcn.model.embeddable.OpeningHours;
+import com.ismaildrcn.utils.SlugUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,6 +19,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +35,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = { "address", "category", "cuisine", "orders" })
 public class Restaurant extends BaseEntity {
 
     private String name;
@@ -107,4 +110,12 @@ public class Restaurant extends BaseEntity {
 
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;
+
+    @PrePersist
+    @PreUpdate
+    private void generatedSlugFromName() {
+        if (this.name != null && !this.name.isEmpty()) {
+            this.slug = SlugUtils.generateSlug(this.name);
+        }
+    }
 }

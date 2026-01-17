@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import com.ismaildrcn.model.embeddable.OpeningHours;
 import com.ismaildrcn.model.entity.Address;
-import com.ismaildrcn.model.entity.RestaurantCategory;
-import com.ismaildrcn.model.entity.RestaurantCuisine;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -59,9 +57,9 @@ public class DtoRestaurantResponse {
 
     private String taxNumber;
 
-    private RestaurantCategory category;
+    private DtoRestaurantCategoryResponse category;
 
-    private RestaurantCuisine cuisine;
+    private DtoRestaurantCuisineResponse cuisine;
 
     private Address address;
 
