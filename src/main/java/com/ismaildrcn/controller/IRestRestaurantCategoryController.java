@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.ismaildrcn.model.dto.DtoRestaurantCategoryRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantCategoryResponse;
 
-public interface IRestRestaurantCategory {
+public interface IRestRestaurantCategoryController {
 
     public RootEntity<DtoRestaurantCategoryResponse> saveRestaurantCategory(DtoRestaurantCategoryRequest request);
 

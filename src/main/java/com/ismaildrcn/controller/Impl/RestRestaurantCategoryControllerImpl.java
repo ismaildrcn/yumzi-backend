@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ismaildrcn.controller.IRestRestaurantCategory;
+import com.ismaildrcn.controller.IRestRestaurantCategoryController;
 import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.DtoRestaurantCategoryRequest;
@@ -24,7 +24,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/rest/api/restaurant/category")
-public class RestRestaurantCategoryImpl extends RestBaseController implements IRestRestaurantCategory {
+public class RestRestaurantCategoryControllerImpl extends RestBaseController
+        implements IRestRestaurantCategoryController {
 
     @Autowired
     private IRestaurantCategoryService restaurantCategoryService;
