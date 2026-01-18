@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -23,7 +22,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = { BaseException.class })
     public ResponseEntity<ApiError<?>> handleBaseException(BaseException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(creatApiError(ex.getMessage(), request));
+        ApiError<?> apiError = creatApiError(ex.getMessage(), request);
+        return ResponseEntity.status(ex.getHttpStatus()).body(apiError);
     }
 
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
@@ -60,7 +60,6 @@ public class GlobalExceptionHandler {
 
     public <E> ApiError<E> creatApiError(E message, WebRequest request) {
         ApiError<E> apiError = new ApiError<>();
-        apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         Exception<E> exception = new Exception<>();
         exception.setPath(request.getDescription(false).substring(4));
