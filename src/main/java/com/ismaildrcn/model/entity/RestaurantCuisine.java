@@ -24,6 +24,7 @@ public class RestaurantCuisine extends BaseEntity {
 
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "icon_url")

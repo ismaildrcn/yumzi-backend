@@ -42,6 +42,7 @@ public class Restaurant extends BaseEntity {
 
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "phone_number")
