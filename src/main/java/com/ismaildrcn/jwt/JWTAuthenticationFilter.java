@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,11 +69,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException ex) {
             exceptionResolver.resolveException(request, response, null,
-                    new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token)));
+                    new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, token, HttpStatus.UNAUTHORIZED)));
         } catch (Exception e) {
             exceptionResolver.resolveException(request, response, null,
                     new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION,
-                            e.getMessage())));
+                            e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR)));
         }
     }
 
