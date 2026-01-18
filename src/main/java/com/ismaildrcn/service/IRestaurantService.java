@@ -11,7 +11,7 @@ public interface IRestaurantService {
 
     DtoRestaurantResponse getRestaurantByUniqueId(UUID uniqueId);
 
-    DtoRestaurantRequest updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request);
+    DtoRestaurantResponse updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request);
 
     void deleteRestaurantByUniqueId(UUID uniqueId);
 }

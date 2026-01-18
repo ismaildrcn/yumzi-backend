@@ -17,4 +17,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     boolean existsBySlug(String slug);
 
+    Optional<Restaurant> findBySlug(String slug);
+
+    Optional<Restaurant> findByName(String name);
+
 }

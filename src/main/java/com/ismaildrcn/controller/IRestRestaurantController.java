@@ -11,4 +11,6 @@ public interface IRestRestaurantController {
 
     RootEntity<DtoRestaurantResponse> getRestaurantByUniqueId(UUID uniqueId);
 
+    RootEntity<DtoRestaurantResponse> updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request);
+
 }

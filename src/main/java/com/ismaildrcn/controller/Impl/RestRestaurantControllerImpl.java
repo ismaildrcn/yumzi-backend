@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,13 @@ public class RestRestaurantControllerImpl extends RestBaseController implements 
     @GetMapping("/{uniqueId}")
     public RootEntity<DtoRestaurantResponse> getRestaurantByUniqueId(@PathVariable UUID uniqueId) {
         return ok(restaurantService.getRestaurantByUniqueId(uniqueId));
+    }
+
+    @Override
+    @PatchMapping("/{uniqueId}")
+    public RootEntity<DtoRestaurantResponse> updateRestaurantByUniqueId(@PathVariable UUID uniqueId,
+            @Valid @RequestBody DtoRestaurantRequest request) {
+        return ok(restaurantService.updateRestaurantByUniqueId(uniqueId, request));
     }
 
 }

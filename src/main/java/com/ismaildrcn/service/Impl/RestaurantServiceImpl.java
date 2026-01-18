@@ -58,8 +58,17 @@ public class RestaurantServiceImpl implements IRestaurantService {
     }
 
     @Override
-    public DtoRestaurantRequest updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request) {
-        return null;
+    public DtoRestaurantResponse updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request) {
+        checkExistsForUpdate(request, uniqueId);
+        Restaurant dbRestaurant = restaurantRepository.findByUniqueId(uniqueId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Restaurant with uniqueId " + uniqueId + " not found.")));
+
+        BeanUtils.copyProperties(request, dbRestaurant);
+        restaurantRepository.save(dbRestaurant);
+
+        DtoRestaurantResponse response = convertToDto(dbRestaurant);
+        return response;
     }
 
     private DtoRestaurantResponse convertToDto(Restaurant restaurant) {
@@ -107,6 +116,25 @@ public class RestaurantServiceImpl implements IRestaurantService {
             throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
                     "Restaurant with slug " + slug + " already exists."));
         }
+    }
+
+    private void checkExistsForUpdate(DtoRestaurantRequest request, UUID currentId) {
+        String slug = SlugUtils.generateSlug(request.getName());
+
+        // Slug kontrolü - kendi kaydı hariç
+        restaurantRepository.findBySlug(slug).ifPresent(restaurant -> {
+            if (!restaurant.getUniqueId().equals(currentId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD, "Slug: " + slug));
+            }
+        });
+
+        // Name kontrolü - kendi kaydı hariç
+        restaurantRepository.findByName(request.getName()).ifPresent(restaurant -> {
+            if (!restaurant.getUniqueId().equals(currentId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
+                        "Name: " + request.getName()));
+            }
+        });
     }
 
 }
