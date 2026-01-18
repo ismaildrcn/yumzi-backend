@@ -1,5 +1,6 @@
 package com.ismaildrcn.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -36,11 +37,17 @@ public class RestaurantServiceImpl implements IRestaurantService {
 
     @Override
     public void deleteRestaurantByUniqueId(UUID uniqueId) {
+        Restaurant restaurantEntity = restaurantRepository.findByUniqueId(uniqueId).orElseThrow(
+                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Restaurant with uniqueId " + uniqueId + " not found.")));
 
+        restaurantEntity.setDeletedAt(LocalDateTime.now());
+        restaurantRepository.save(restaurantEntity);
     }
 
     @Override
     public DtoRestaurantResponse getRestaurantByUniqueId(UUID uniqueId) {
+        isDeleted(uniqueId);
         Restaurant restaurantEntity = restaurantRepository.findByUniqueId(uniqueId).orElseThrow(
                 () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
                         "Restaurant with uniqueId " + uniqueId + " not found.")));
@@ -119,6 +126,7 @@ public class RestaurantServiceImpl implements IRestaurantService {
     }
 
     private void checkExistsForUpdate(DtoRestaurantRequest request, UUID currentId) {
+        isDeleted(currentId);
         String slug = SlugUtils.generateSlug(request.getName());
 
         // Slug kontrolü - kendi kaydı hariç
@@ -135,6 +143,16 @@ public class RestaurantServiceImpl implements IRestaurantService {
                         "Name: " + request.getName()));
             }
         });
+    }
+
+    private void isDeleted(UUID uniqueId) {
+        Restaurant restaurant = restaurantRepository.findByUniqueId(uniqueId).orElseThrow(
+                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Restaurant with uniqueId " + uniqueId + " not found.")));
+        if (restaurant.getDeletedAt() != null) {
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                    "Restaurant with uniqueId " + uniqueId + " is already deleted."));
+        }
     }
 
 }

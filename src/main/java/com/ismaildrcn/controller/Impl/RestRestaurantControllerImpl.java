@@ -3,6 +3,7 @@ package com.ismaildrcn.controller.Impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,13 @@ public class RestRestaurantControllerImpl extends RestBaseController implements 
     public RootEntity<DtoRestaurantResponse> updateRestaurantByUniqueId(@PathVariable UUID uniqueId,
             @Valid @RequestBody DtoRestaurantRequest request) {
         return ok(restaurantService.updateRestaurantByUniqueId(uniqueId, request));
+    }
+
+    @Override
+    @DeleteMapping("/{uniqueId}")
+    public RootEntity<?> deleteRestaurantByUniqueId(@PathVariable UUID uniqueId) {
+        restaurantService.deleteRestaurantByUniqueId(uniqueId);
+        return ok("Restaurant deleted successfully.");
     }
 
 }
