@@ -1,10 +1,11 @@
 package com.ismaildrcn.model.dto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.ismaildrcn.model.embeddable.Allergens;
 import com.ismaildrcn.model.entity.MenuCategory;
-import com.ismaildrcn.model.entity.Restaurant;
+import com.ismaildrcn.model.enums.CurrencyType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,13 +24,13 @@ public class DtoMenuItemResponse {
 
     private String slug;
 
-    private String price;
+    private BigDecimal price;
 
-    private String discountPrice;
+    private BigDecimal discountPrice;
 
     private double discountPercentage;
 
-    private String currency;
+    private CurrencyType currency;
 
     private boolean isActive;
 
@@ -75,7 +76,7 @@ public class DtoMenuItemResponse {
 
     private Integer reviewCount;
 
-    private Restaurant restaurant;
+    private DtoRestaurantResponse restaurant;
 
     private MenuCategory category;
 

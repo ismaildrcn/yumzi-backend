@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CurrencyType {
+    TRY("TRY"),
     USD("USD"),
     EUR("EUR"),
     GBP("GBP"),

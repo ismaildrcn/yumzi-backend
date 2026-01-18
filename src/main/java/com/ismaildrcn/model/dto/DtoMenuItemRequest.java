@@ -83,7 +83,7 @@ public class DtoMenuItemRequest {
 
     private Allergens allergens;
 
-    private UUID restaurant_id;
+    private UUID restaurantId;
 
-    private UUID category_id;
+    private UUID categoryId;
 }

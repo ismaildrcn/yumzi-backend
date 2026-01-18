@@ -8,4 +8,8 @@ import com.ismaildrcn.model.entity.MenuItem;
 @Repository
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
+    boolean existsByName(String name);
+
+    boolean existsBySlug(String slug);
+
 }
