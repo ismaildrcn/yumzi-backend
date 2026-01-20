@@ -1,5 +1,8 @@
 package com.ismaildrcn.model.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MenuCategoryType {
     STANDARD("STANDARD"),
     PROMOTION("PROMOTION"),
@@ -14,13 +17,9 @@ public enum MenuCategoryType {
     LUNCH("LUNCH"),
     DINNER("DINNER");
 
-    private final String displayName;
+    private final String type;
 
-    MenuCategoryType(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
+    MenuCategoryType(String type) {
+        this.type = type;
     }
 }

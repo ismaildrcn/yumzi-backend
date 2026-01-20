@@ -20,7 +20,11 @@ public class DtoMenuCategoryRequest {
     @NotNull(message = "Image URL cannot be null")
     private String imageUrl;
 
+    @NotNull(message = "isActive cannot be null")
     private Boolean isActive;
+
+    @NotNull(message = "isFeatured cannot be null")
+    private Boolean isFeatured;
 
     private MenuCategoryType categoryType = MenuCategoryType.STANDARD;
 }

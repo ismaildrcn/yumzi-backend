@@ -2,6 +2,8 @@ package com.ismaildrcn.model.dto;
 
 import java.util.UUID;
 
+import com.ismaildrcn.model.enums.MenuCategoryType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,6 @@ public class DtoMenuCategoryResponse {
 
     private Boolean isFeatured;
 
-    private String categoryType;
+    private MenuCategoryType categoryType;
 
 }
