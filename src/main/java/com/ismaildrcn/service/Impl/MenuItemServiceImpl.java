@@ -1,5 +1,9 @@
 package com.ismaildrcn.service.Impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +14,7 @@ import com.ismaildrcn.exception.MessageType;
 import com.ismaildrcn.model.dto.DtoMenuCategoryResponse;
 import com.ismaildrcn.model.dto.DtoMenuItemRequest;
 import com.ismaildrcn.model.dto.DtoMenuItemResponse;
-import com.ismaildrcn.model.dto.DtoRestaurantResponse;
+import com.ismaildrcn.model.dto.DtoRestaurantSummary;
 import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.MenuItem;
 import com.ismaildrcn.model.entity.Restaurant;
@@ -33,22 +37,34 @@ public class MenuItemServiceImpl implements IMenuItemService {
     private MenuCategoryRepository menuCategoryRepository;
 
     @Override
-    public DtoMenuItemResponse saveMenuItem(DtoMenuItemRequest request) {
-        MenuItem menuItemEntity = createMenuItemFromRequest(request);
+    public DtoMenuItemResponse saveMenuItem(UUID restaurantUniqueId, DtoMenuItemRequest request) {
+        MenuItem menuItemEntity = createMenuItemFromRequest(restaurantUniqueId, request);
         menuItemEntity = menuItemRepository.save(menuItemEntity);
         DtoMenuItemResponse response = convertToDto(menuItemEntity);
         return response;
     }
 
-    private MenuItem createMenuItemFromRequest(DtoMenuItemRequest request) {
+    @Override
+    public List<DtoMenuItemResponse> findMenuItemsByRestaurantId(UUID restaurantUniqueId) {
+        List<DtoMenuItemResponse> responseList = new ArrayList<>();
+        List<MenuItem> menuItemListByRestaurant = menuItemRepository.findByRestaurantUniqueId(restaurantUniqueId);
+
+        for (MenuItem menuItem : menuItemListByRestaurant) {
+            DtoMenuItemResponse dtoMenuItemResponse = convertToDto(menuItem);
+            responseList.add(dtoMenuItemResponse);
+        }
+        return responseList;
+    }
+
+    private MenuItem createMenuItemFromRequest(UUID restaurantUniqueId, DtoMenuItemRequest request) {
         isExistMenuItem(request);
 
         MenuItem menuItem = new MenuItem();
         BeanUtils.copyProperties(request, menuItem);
 
-        Restaurant restaurant = restaurantRepository.findByUniqueId(request.getRestaurantId())
+        Restaurant restaurant = restaurantRepository.findByUniqueId(restaurantUniqueId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
-                        "Restaurant with uniqueId: " + request.getRestaurantId() + " not found.")));
+                        "Restaurant with uniqueId: " + restaurantUniqueId + " not found.")));
 
         MenuCategory menuCategory = menuCategoryRepository.findByUniqueId(request.getCategoryId())
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
@@ -76,7 +92,7 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
     private DtoMenuItemResponse convertToDto(MenuItem menuItemEntity) {
         DtoMenuItemResponse response = new DtoMenuItemResponse();
-        DtoRestaurantResponse restaurantResponse = new DtoRestaurantResponse();
+        DtoRestaurantSummary restaurantResponse = new DtoRestaurantSummary();
         DtoMenuCategoryResponse categoryResponse = new DtoMenuCategoryResponse();
 
         BeanUtils.copyProperties(menuItemEntity, response);
