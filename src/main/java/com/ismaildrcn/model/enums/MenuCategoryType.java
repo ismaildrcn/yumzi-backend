@@ -1,18 +1,18 @@
 package com.ismaildrcn.model.enums;
 
 public enum MenuCategoryType {
-    STANDARD("Standart"),
-    PROMOTION("Promosyon"),
-    COMBO("Combo Menu"),
-    CHEF_SPECIAL("Chef's Special"),
-    SEASONAL("Seasonal"),
-    KIDS("Kids Menu"),
-    DRINKS("Drinks"),
-    DESSERT("Desserts"),
-    APPETIZER("Appetizers"),
-    BREAKFAST("Breakfast"),
-    LUNCH("Lunch"),
-    DINNER("Dinner");
+    STANDARD("STANDARD"),
+    PROMOTION("PROMOTION"),
+    COMBO("COMBO"),
+    CHEF_SPECIAL("CHEF_SPECIAL"),
+    SEASONAL("SEASONAL"),
+    KIDS("KIDS"),
+    DRINKS("DRINKS"),
+    DESSERT("DESSERTS"),
+    APPETIZER("APPETIZERS"),
+    BREAKFAST("BREAKFAST"),
+    LUNCH("LUNCH"),
+    DINNER("DINNER");
 
     private final String displayName;
 
