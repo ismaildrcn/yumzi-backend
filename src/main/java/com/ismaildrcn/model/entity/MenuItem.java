@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
 import com.ismaildrcn.model.embeddable.Allergens;
@@ -33,6 +34,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@SQLRestriction("deleted_at IS NULL") // Soft delete implementation
 public class MenuItem extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 100)

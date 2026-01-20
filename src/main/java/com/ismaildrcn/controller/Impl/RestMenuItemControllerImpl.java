@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,13 @@ public class RestMenuItemControllerImpl extends RestBaseController implements IR
             @PathVariable UUID menuItemId,
             @Valid @RequestBody DtoMenuItemRequest request) {
         return ok(menuItemService.updateMenuItem(restaurantId, menuItemId, request));
+    }
+
+    @Override
+    @DeleteMapping("/{restaurantId}/menu-items/{menuItemId}")
+    public RootEntity<?> deleteMenuItem(@PathVariable UUID restaurantId, @PathVariable UUID menuItemId) {
+        menuItemService.deleteMenuItem(restaurantId, menuItemId);
+        return ok("Menu item deleted successfully");
     }
 
 }

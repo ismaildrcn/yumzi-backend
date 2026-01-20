@@ -1,5 +1,6 @@
 package com.ismaildrcn.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,6 +71,17 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
         DtoMenuItemResponse response = convertToDto(updatedMenuItem);
         return response;
+    }
+
+    @Override
+    public void deleteMenuItem(UUID restaurantId, UUID menuItemId) {
+        MenuItem menuItem = menuItemRepository.findByUniqueId(menuItemId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Menu item with uniqueId: " + menuItemId + " not found.")));
+
+        menuItem.setDeletedAt(LocalDateTime.now());
+        menuItemRepository.save(menuItem);
+        
     }
 
     private MenuItem createMenuItemFromRequest(UUID restaurantId, DtoMenuItemRequest request) {
