@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
+import com.ismaildrcn.model.dto.DtoMenuCategoryResponse;
 import com.ismaildrcn.model.dto.DtoMenuItemRequest;
 import com.ismaildrcn.model.dto.DtoMenuItemResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
+import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.MenuItem;
 import com.ismaildrcn.model.entity.Restaurant;
+import com.ismaildrcn.repository.MenuCategoryRepository;
 import com.ismaildrcn.repository.MenuItemRepository;
 import com.ismaildrcn.repository.RestaurantRepository;
 import com.ismaildrcn.service.IMenuItemService;
@@ -25,6 +28,9 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private MenuCategoryRepository menuCategoryRepository;
 
     @Override
     public DtoMenuItemResponse saveMenuItem(DtoMenuItemRequest request) {
@@ -44,7 +50,12 @@ public class MenuItemServiceImpl implements IMenuItemService {
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
                         "Restaurant with uniqueId: " + request.getRestaurantId() + " not found.")));
 
+        MenuCategory menuCategory = menuCategoryRepository.findByUniqueId(request.getCategoryId())
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Menu category with uniqueId: " + request.getCategoryId() + " not found.")));
+
         menuItem.setRestaurant(restaurant);
+        menuItem.setCategory(menuCategory);
         menuItem.setPrice(menuItem.getFinalPrice());
 
         return menuItem;
@@ -66,10 +77,13 @@ public class MenuItemServiceImpl implements IMenuItemService {
     private DtoMenuItemResponse convertToDto(MenuItem menuItemEntity) {
         DtoMenuItemResponse response = new DtoMenuItemResponse();
         DtoRestaurantResponse restaurantResponse = new DtoRestaurantResponse();
+        DtoMenuCategoryResponse categoryResponse = new DtoMenuCategoryResponse();
 
         BeanUtils.copyProperties(menuItemEntity, response);
         BeanUtils.copyProperties(menuItemEntity.getRestaurant(), restaurantResponse);
+        BeanUtils.copyProperties(menuItemEntity.getCategory(), categoryResponse);
         response.setRestaurant(restaurantResponse);
+        response.setCategory(categoryResponse);
         return response;
     }
 }

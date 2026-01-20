@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.ismaildrcn.model.embeddable.Allergens;
-import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.enums.CurrencyType;
 
 import lombok.AllArgsConstructor;
@@ -78,6 +77,6 @@ public class DtoMenuItemResponse {
 
     private DtoRestaurantResponse restaurant;
 
-    private MenuCategory category;
+    private DtoMenuCategoryResponse category;
 
 }
