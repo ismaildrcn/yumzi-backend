@@ -1,6 +1,7 @@
 package com.ismaildrcn.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,11 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
     @Query("SELECT m FROM MenuItem m WHERE m.restaurant.uniqueId = :restaurantUniqueId")
     List<MenuItem> findByRestaurantUniqueId(UUID restaurantUniqueId);
+
+    Optional<MenuItem> findBySlug(String slug);
+
+    Optional<MenuItem> findByName(String name);
+
+    Optional<MenuItem> findByUniqueId(UUID uniqueId);
 
 }

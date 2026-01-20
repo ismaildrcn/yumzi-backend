@@ -8,8 +8,10 @@ import com.ismaildrcn.model.dto.DtoMenuItemResponse;
 
 public interface IMenuItemService {
 
-    DtoMenuItemResponse saveMenuItem(UUID restaurantUniqueId, DtoMenuItemRequest request);
+    DtoMenuItemResponse saveMenuItem(UUID restaurantId, DtoMenuItemRequest request);
 
-    List<DtoMenuItemResponse> findMenuItemsByRestaurantId(UUID restaurantUniqueId);
+    DtoMenuItemResponse updateMenuItem(UUID restaurantId, UUID menuItemId, DtoMenuItemRequest request);
+
+    List<DtoMenuItemResponse> findMenuItemsByRestaurantId(UUID restaurantId);
 
 }

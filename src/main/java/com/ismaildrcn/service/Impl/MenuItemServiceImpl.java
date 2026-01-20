@@ -56,15 +56,30 @@ public class MenuItemServiceImpl implements IMenuItemService {
         return responseList;
     }
 
-    private MenuItem createMenuItemFromRequest(UUID restaurantUniqueId, DtoMenuItemRequest request) {
-        isExistMenuItem(request);
+    @Override
+    public DtoMenuItemResponse updateMenuItem(UUID restaurantId, UUID menuItemId, DtoMenuItemRequest request) {
+        checkExistsForUpdate(request, restaurantId, menuItemId);
 
+        MenuItem dbMenuItem = menuItemRepository.findByUniqueId(menuItemId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Menu item with uniqueId: " + menuItemId + " not found.")));
+
+        BeanUtils.copyProperties(request, dbMenuItem);
+
+        MenuItem updatedMenuItem = menuItemRepository.save(dbMenuItem);
+
+        DtoMenuItemResponse response = convertToDto(updatedMenuItem);
+        return response;
+    }
+
+    private MenuItem createMenuItemFromRequest(UUID restaurantId, DtoMenuItemRequest request) {
+        Restaurant restaurant = restaurantRepository.findByUniqueId(restaurantId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Restaurant with uniqueId: " + restaurantId + " not found.")));
+
+        isExistMenuItem(restaurantId, request);
         MenuItem menuItem = new MenuItem();
         BeanUtils.copyProperties(request, menuItem);
-
-        Restaurant restaurant = restaurantRepository.findByUniqueId(restaurantUniqueId)
-                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
-                        "Restaurant with uniqueId: " + restaurantUniqueId + " not found.")));
 
         MenuCategory menuCategory = menuCategoryRepository.findByUniqueId(request.getCategoryId())
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
@@ -77,17 +92,43 @@ public class MenuItemServiceImpl implements IMenuItemService {
         return menuItem;
     }
 
-    private void isExistMenuItem(DtoMenuItemRequest request) {
+    private void isExistMenuItem(UUID restaurantId, DtoMenuItemRequest request) {
         String slug = SlugUtils.generateSlug(request.getName());
 
-        if (menuItemRepository.existsByName(request.getName())) {
-            throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
-                    "Menu item with name '" + request.getName() + "' already exists."));
-        }
-        if (menuItemRepository.existsBySlug(slug)) {
-            throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
-                    "Menu item with slug '" + slug + "' already exists."));
-        }
+        menuItemRepository.findByName(request.getName()).ifPresent(item -> {
+            if (item.getRestaurant().getUniqueId().equals(restaurantId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
+                        "Menu item with name '" + request.getName() + "' already exists."));
+            }
+        });
+
+        menuItemRepository.findBySlug(slug).ifPresent(item -> {
+            if (item.getRestaurant().getUniqueId().equals(restaurantId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
+                        "Menu item with slug '" + slug + "' already exists."));
+            }
+        });
+    }
+
+    private void checkExistsForUpdate(DtoMenuItemRequest request, UUID restaurantId, UUID currentId) {
+        String slug = SlugUtils.generateSlug(request.getName());
+
+        // Slug kontrolü - kendi kaydı hariç
+        menuItemRepository.findBySlug(slug).ifPresent(item -> {
+            if (item.getRestaurant().getUniqueId().equals(restaurantId)
+                    && !item.getUniqueId().equals(currentId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD, "Slug: " + slug));
+            }
+        });
+
+        // Name kontrolü - kendi kaydı hariç
+        menuItemRepository.findByName(request.getName()).ifPresent(item -> {
+            if (item.getRestaurant().getUniqueId().equals(restaurantId)
+                    && !item.getUniqueId().equals(currentId)) {
+                throw new BaseException(new ErrorMessage(MessageType.ALREADY_EXISTS_RECORD,
+                        "Name: " + request.getName()));
+            }
+        });
     }
 
     private DtoMenuItemResponse convertToDto(MenuItem menuItemEntity) {

@@ -12,4 +12,7 @@ public interface IRestMenuItemController {
 
     RootEntity<List<DtoMenuItemResponse>> findMenuItemsByRestaurantId(UUID restaurantUniqueId);
 
+    RootEntity<DtoMenuItemResponse> updateMenuItem(UUID restaurantId, UUID menuItemId,
+            DtoMenuItemRequest request);
+
 }
