@@ -1,5 +1,7 @@
 package com.ismaildrcn.model.entity;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.ismaildrcn.model.enums.AddressType;
 
 import jakarta.persistence.Column;
@@ -29,6 +31,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@SQLRestriction("deleted_at IS NULL")
 public class Address extends BaseEntity {
 
     private String title;
