@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.ismaildrcn.model.entity.Order;
 import com.ismaildrcn.model.enums.Gender;
+import com.ismaildrcn.model.enums.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,8 @@ public class DtoUserResponse {
     private boolean emailVerified = false;
 
     private boolean phoneNumberVerified = false;
+
+    private UserRole role;
 
     private List<DtoAddressResponse> address;
 
