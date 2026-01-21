@@ -34,7 +34,7 @@ public class RestaurantCategory extends BaseEntity {
     private Integer sortOrder;
 
     @Column(name = "is_active")
-    private boolean isActive = true;
+    private Boolean isActive;
 
     @PrePersist
     @PreUpdate

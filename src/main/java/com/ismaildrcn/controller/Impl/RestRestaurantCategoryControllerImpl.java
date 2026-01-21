@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class RestRestaurantCategoryControllerImpl extends RestBaseController
 
     @Override
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RootEntity<DtoRestaurantCategoryResponse> saveRestaurantCategory(
             @Valid @RequestBody DtoRestaurantCategoryRequest request) {
         return ok(restaurantCategoryService.saveRestaurantCategory(request));
@@ -46,6 +48,7 @@ public class RestRestaurantCategoryControllerImpl extends RestBaseController
 
     @Override
     @PatchMapping("/update/{uniqueId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RootEntity<DtoRestaurantCategoryResponse> updateRestaurantCategory(@PathVariable UUID uniqueId,
             @Valid @RequestBody DtoRestaurantCategoryRequest request) {
         return ok(restaurantCategoryService.updateRestaurantCategory(uniqueId, request));
