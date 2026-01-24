@@ -1,80 +1,56 @@
 package com.ismaildrcn.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "carts", indexes = {
-        @Index(name = "idx_carts_user_id", columnList = "user_id"),
-        @Index(name = "idx_carts_restaurant_id", columnList = "restaurant_id")
-})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Cart extends BaseEntity {
-    // Aktif kullanici sepeti
+@RedisHash("Cart")
+public class Cart implements Serializable {
+    // Aktif kullanici sepeti (Redis'te geçici, 2 saat TTL)
 
-    @Column(name = "sub_total", nullable = false, precision = 10, scale = 2)
+    @Id
+    private String id; // Format: "user:{userId}"
+
+    @Indexed
+    private UUID userId; // User'ın UUID'si
+
     private BigDecimal subTotal = BigDecimal.ZERO;
-
-    @Column(name = "delivery_fee", precision = 10, scale = 2)
     private BigDecimal deliveryFee = BigDecimal.ZERO;
-
-    @Column(name = "tax_amount", precision = 10, scale = 2)
     private BigDecimal taxAmount = BigDecimal.ZERO;
-
-    @Column(name = "service_fee", precision = 10, scale = 2)
     private BigDecimal serviceFee = BigDecimal.ZERO;
-
-    @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount = BigDecimal.ZERO;
-
-    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Column(name = "coupon_code")
     private String couponCode;
-
-    @Column(name = "coupon_discount", precision = 10, scale = 2)
     private BigDecimal couponDiscount = BigDecimal.ZERO;
 
-    @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
-
-    @Column(name = "expires_at")
     private LocalDateTime expiresAt;
-
-    @Column(name = "converted_to_order")
     private Boolean convertedToOrder = false;
-
-    @Column(name = "converted_at")
     private LocalDateTime convertedAt;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> cartItems;
+    // CartItem'lar embedded olarak (ayrı tablo yok)
+    private List<CartItem> cartItems = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    // Restaurant ID (ilişki değil, sadece ID)
+    private UUID restaurantId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    @TimeToLive
+    private Long ttl = 7200L; // 2 saat (otomatik expire)
 
 }
