@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
 import com.ismaildrcn.model.embeddable.Allergens;
 import com.ismaildrcn.model.enums.CurrencyType;
+import com.ismaildrcn.utils.SlugUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +34,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@SQLRestriction("deleted_at IS NULL") // Soft delete implementation
 public class MenuItem extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 100)
@@ -144,6 +149,14 @@ public class MenuItem extends BaseEntity {
 
     public boolean hasDiscaunt() {
         return (discountPrice != null && discountPrice.compareTo(price) < 0);
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void generatedSlugFromName() {
+        if (this.name != null && !this.name.isEmpty()) {
+            this.slug = SlugUtils.generateSlug(this.name);
+        }
     }
 
 }

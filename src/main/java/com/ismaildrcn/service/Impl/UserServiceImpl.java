@@ -74,9 +74,6 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findByUniqueId(uniqueId)
                 .orElseThrow(
                         () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId)));
-        if (user.getDeletedAt() != null) {
-            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId));
-        }
         return user;
     }
 

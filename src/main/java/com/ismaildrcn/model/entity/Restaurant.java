@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
 import com.ismaildrcn.model.embeddable.BankAccounts;
@@ -36,12 +37,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = { "address", "category", "cuisine", "orders" })
+@SQLRestriction("deleted_at IS NULL")
 public class Restaurant extends BaseEntity {
 
     private String name;
 
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "phone_number")

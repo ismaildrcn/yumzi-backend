@@ -19,4 +19,7 @@ public class DtoRestaurantCategoryRequest {
     @NotNull(message = "Icon URL cannot be null")
     private String iconUrl;
 
+    @NotNull(message = "Active status cannot be null")
+    private Boolean isActive;
+
 }
