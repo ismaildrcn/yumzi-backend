@@ -47,7 +47,6 @@ public class Cart implements Serializable {
     // CartItem'lar embedded olarak (ayrı tablo yok)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    // Restaurant ID (ilişki değil, sadece ID)
     private UUID restaurantId;
 
     @TimeToLive

@@ -1,6 +1,7 @@
 package com.ismaildrcn.service.Impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,16 @@ import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
 import com.ismaildrcn.model.dto.DtoCartItemRequest;
+import com.ismaildrcn.model.dto.DtoCartResponse;
+import com.ismaildrcn.model.dto.DtoRestaurantSummary;
 import com.ismaildrcn.model.entity.Cart;
 import com.ismaildrcn.model.entity.CartItem;
 import com.ismaildrcn.model.entity.MenuItem;
+import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.CartRepository;
 import com.ismaildrcn.repository.MenuItemRepository;
+import com.ismaildrcn.repository.RestaurantRepository;
 import com.ismaildrcn.service.ICartService;
 
 @Service
@@ -27,6 +32,9 @@ public class CartServiceImpl implements ICartService {
     @Autowired
     private MenuItemRepository menuItemRepository;
 
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
     @Override
     public CartItem addItemToCart(DtoCartItemRequest request, User user) {
 
@@ -36,13 +44,48 @@ public class CartServiceImpl implements ICartService {
         Cart userCart = getUserCartFromCache(user);
         CartItem cartItem = createCartItemFromMenuItem(menuItem, request);
         userCart.getCartItems().add(cartItem);
+
+        // Toplam hesaplama (fiyatlar zaten vergi dahil)
+        BigDecimal totalWithTax = BigDecimal.ZERO;
+        for (CartItem item : userCart.getCartItems()) {
+            totalWithTax = totalWithTax.add(item.getTotalPrice());
+        }
+
+        // Vergi dahil fiyattan vergi miktarını hesapla
+        // totalWithTax = vergisiz * 1.01
+        // vergisiz = totalWithTax / 1.01
+        BigDecimal subTotal = totalWithTax.divide(new BigDecimal("1.01"), 2, RoundingMode.HALF_UP);
+        BigDecimal taxAmount = totalWithTax.subtract(subTotal);
+
+        userCart.setSubTotal(subTotal); // Vergisiz tutar (backend için)
+        userCart.setTaxAmount(taxAmount); // Vergi tutarı (backend için)
+        userCart.setTotalAmount(totalWithTax); // Vergi dahil toplam (kullanıcının ödeyeceği)
+        userCart.setRestaurantId(menuItem.getRestaurant().getUniqueId());
+
         cartRepository.save(userCart);
         return cartItem;
     }
 
     @Override
-    public Cart getUserCart(User user) {
-        return null;
+    public DtoCartResponse getUserCart(User user) {
+        Cart cart = getUserCartFromCache(user);
+
+        DtoCartResponse response = new DtoCartResponse();
+        BeanUtils.copyProperties(cart, response);
+
+        BigDecimal subTotal = cart.getCartItems().stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        response.setSubTotal(subTotal);
+        response.setTotalAmount(cart.getTotalAmount());
+        Restaurant restaurant = restaurantRepository.findByUniqueId(cart.getRestaurantId())
+                .orElse(null);
+        DtoRestaurantSummary dtoRestaurant = new DtoRestaurantSummary();
+        if (restaurant != null) {
+            BeanUtils.copyProperties(restaurant, dtoRestaurant);
+        }
+        response.setRestaurant(dtoRestaurant);
+        return response;
     }
 
     private CartItem createCartItemFromMenuItem(MenuItem menuItem, DtoCartItemRequest request) {
