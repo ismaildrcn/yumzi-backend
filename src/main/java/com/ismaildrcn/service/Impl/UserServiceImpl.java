@@ -26,21 +26,22 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public void deleteUserByUniqueId(UUID uniqueId) {
-        User user = getUserEntityById(uniqueId);
+    public void deleteUser(User user) {
+        User existingUser = getUserEntityById(user.getUniqueId());
 
-        user.setDeletedAt(LocalDateTime.now());
-        userRepository.save(user);
+        existingUser.setDeletedAt(LocalDateTime.now());
+        userRepository.save(existingUser);
     }
 
     @Override
-    public DtoUserResponse getUserByUniqueId(UUID uniqueId) {
+    public DtoUserResponse getUser(User user) {
         DtoUserResponse dtoUser = new DtoUserResponse();
         List<DtoAddressResponse> dtoAddress = new ArrayList<>();
-        User user = getUserEntityById(uniqueId);
-        BeanUtils.copyProperties(user, dtoUser);
 
-        for (var address : user.getAddress()) {
+        User existingUser = getUserEntityById(user.getUniqueId());
+        BeanUtils.copyProperties(existingUser, dtoUser);
+
+        for (var address : existingUser.getAddress()) {
             DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
             BeanUtils.copyProperties(address, dtoAddressResponse);
             dtoAddress.add(dtoAddressResponse);
@@ -50,21 +51,20 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public DtoUserResponse updateUserByUniqueId(UUID uniqueId, DtoUserRequest dtoUserRequest) {
-        return updateUserFromDto(uniqueId, dtoUserRequest);
+    public DtoUserResponse updateUser(User user, DtoUserRequest dtoUserRequest) {
+        return updateUserFromDto(user, dtoUserRequest);
     }
 
-    private DtoUserResponse updateUserFromDto(UUID uniqueId, DtoUserRequest dtoUserRequest) {
+    private DtoUserResponse updateUserFromDto(User user, DtoUserRequest dtoUserRequest) {
         DtoUserResponse dtoUser = new DtoUserResponse();
-        User user = getUserEntityById(uniqueId);
+        User existingUser = getUserEntityById(user.getUniqueId());
 
-        if (user.getEmail() != null && !user.getEmail().equals(dtoUserRequest.getEmail())) {
-            user.setEmailVerified(false);
+        if (existingUser.getEmail() != null && !existingUser.getEmail().equals(dtoUserRequest.getEmail())) {
+            existingUser.setEmailVerified(false);
         }
 
-        BeanUtils.copyProperties(dtoUserRequest, user);
-        User updatedUser = userRepository.save(user);
-
+        BeanUtils.copyProperties(dtoUserRequest, existingUser);
+        User updatedUser = userRepository.save(existingUser);
         BeanUtils.copyProperties(updatedUser, dtoUser);
 
         return dtoUser;
