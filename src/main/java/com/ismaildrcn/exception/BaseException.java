@@ -10,7 +10,7 @@ public class BaseException extends RuntimeException {
     private HttpStatus httpStatus;
 
     public BaseException(ErrorMessage message) {
-        this.httpStatus = message.getHttpStatus();
         super(message.prepareErrorMessage());
+        this.httpStatus = message.getHttpStatus();
     }
 }

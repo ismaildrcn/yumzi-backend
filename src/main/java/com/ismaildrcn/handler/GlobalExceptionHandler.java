@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = { BaseException.class })
     public ResponseEntity<ApiError<?>> handleBaseException(BaseException ex, WebRequest request) {
         ApiError<?> apiError = creatApiError(ex.getMessage(), request);
+        apiError.setStatus(ex.getHttpStatus().value());
         return ResponseEntity.status(ex.getHttpStatus()).body(apiError);
     }
 
@@ -40,7 +41,9 @@ public class GlobalExceptionHandler {
                 map.put(fieldName, addValue(new java.util.ArrayList<>(), objError.getDefaultMessage()));
             }
         }
-        return ResponseEntity.badRequest().body(creatApiError(map, request));
+        ApiError<Map<String, List<String>>> apiError = creatApiError(map, request);
+        apiError.setStatus(400);
+        return ResponseEntity.badRequest().body(apiError);
 
     }
 
