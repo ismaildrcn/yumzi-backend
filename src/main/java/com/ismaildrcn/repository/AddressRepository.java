@@ -15,8 +15,8 @@ import com.ismaildrcn.model.entity.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-        @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :uniqueId AND a.deletedAt IS NULL ORDER BY a.isDefault DESC")
-        List<Address> findAllAddressByUniqueId(UUID uniqueId);
+        @Query("SELECT a FROM Address a WHERE a.user.id = :id AND a.deletedAt IS NULL ORDER BY a.isDefault DESC")
+        List<Address> findAllAddressById(Long id);
 
         @Query("SELECT a FROM Address a WHERE a.uniqueId = :uniqueId AND a.deletedAt IS NULL")
         Optional<Address> findByUniqueId(UUID uniqueId);

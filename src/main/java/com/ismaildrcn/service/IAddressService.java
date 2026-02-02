@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.ismaildrcn.model.dto.DtoAddressRequest;
 import com.ismaildrcn.model.dto.DtoAddressResponse;
+import com.ismaildrcn.model.entity.User;
 
 @Service
 public interface IAddressService {
 
-    public List<DtoAddressResponse> findAllAddressByUniqueId(UUID uniqueId);
+    public List<DtoAddressResponse> findAllAddressByUser(User user);
 
-    public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
+    public DtoAddressResponse saveAddressByUser(User user, DtoAddressRequest dtoAddressRequest);
 
     public DtoAddressResponse updateAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest);
 

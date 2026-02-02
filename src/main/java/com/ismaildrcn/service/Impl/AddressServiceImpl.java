@@ -32,9 +32,9 @@ public class AddressServiceImpl implements IAddressService {
     private UserRepository userRepository;
 
     @Override
-    public List<DtoAddressResponse> findAllAddressByUniqueId(UUID uniqueId) {
+    public List<DtoAddressResponse> findAllAddressByUser(User user) {
         List<DtoAddressResponse> dtoAddressResponses = new ArrayList<>();
-        List<Address> allAddressFromDb = addressRepository.findAllAddressByUniqueId(uniqueId);
+        List<Address> allAddressFromDb = addressRepository.findAllAddressById(user.getId());
 
         for (Address address : allAddressFromDb) {
             DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
@@ -46,13 +46,14 @@ public class AddressServiceImpl implements IAddressService {
 
     @Override
     @Transactional
-    public DtoAddressResponse saveAddressByUniqueId(UUID uniqueId, DtoAddressRequest dtoAddressRequest) {
+    public DtoAddressResponse saveAddressByUser(User user, DtoAddressRequest dtoAddressRequest) {
         DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
-        User userDbObject = userRepository.findByUniqueId(uniqueId).orElseThrow(
-                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + uniqueId)));
+        User userDbObject = userRepository.findByUniqueId(user.getUniqueId()).orElseThrow(
+                () -> new BaseException(
+                        new ErrorMessage(MessageType.NO_RECORD_FOUND, "User Id: " + user.getUniqueId())));
 
         if (Boolean.TRUE.equals(dtoAddressRequest.isDefault())) {
-            addressRepository.unsetOtherDefaults(userDbObject.getUniqueId(), uniqueId);
+            addressRepository.unsetOtherDefaults(userDbObject.getUniqueId(), user.getUniqueId());
         }
 
         Address address = createAddressFromDto(dtoAddressRequest);

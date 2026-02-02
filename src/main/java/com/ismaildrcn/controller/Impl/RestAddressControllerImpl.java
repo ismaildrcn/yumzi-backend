@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +19,7 @@ import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.DtoAddressRequest;
 import com.ismaildrcn.model.dto.DtoAddressResponse;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.service.IAddressService;
 
 @RestController
@@ -28,17 +30,17 @@ public class RestAddressControllerImpl extends RestBaseController implements IRe
     private IAddressService addressService;
 
     @Override
-    @GetMapping("/list/{uniqueId}")
-    public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(@PathVariable UUID uniqueId) {
-        return ok(addressService.findAllAddressByUniqueId(uniqueId));
+    @GetMapping("/list")
+    public RootEntity<List<DtoAddressResponse>> findAllAddressByUniqueId(@AuthenticationPrincipal User user) {
+        return ok(addressService.findAllAddressByUser(user));
     }
 
     @Override
-    @PostMapping("/save/{uniqueId}")
+    @PostMapping("/save")
     public RootEntity<DtoAddressResponse> saveAddressByUniqueId(
-            @PathVariable UUID uniqueId,
+            @AuthenticationPrincipal User user,
             @RequestBody DtoAddressRequest dtoAddressRequest) {
-        return ok(addressService.saveAddressByUniqueId(uniqueId, dtoAddressRequest));
+        return ok(addressService.saveAddressByUser(user, dtoAddressRequest));
     }
 
     @Override
