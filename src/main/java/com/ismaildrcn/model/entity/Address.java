@@ -46,11 +46,11 @@ public class Address extends BaseEntity {
     @Column(name = "address_line_2", nullable = true)
     private String addressLine2;
 
+    private String neighborhood;
+
     private String district;
 
-    private String city;
-
-    private String state;
+    private String province;
 
     private String country;
 

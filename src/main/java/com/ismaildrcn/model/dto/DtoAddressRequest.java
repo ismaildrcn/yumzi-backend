@@ -26,14 +26,14 @@ public class DtoAddressRequest {
 
     private String addressLine2;
 
+    @NotNull(message = "Neighborhood cannot be null")
+    private String neighborhood;
+
     @NotNull(message = "District cannot be null")
     private String district;
 
-    @NotNull(message = "City cannot be null")
-    private String city;
-
-    @NotNull(message = "Postal code cannot be null")
-    private String state;
+    @NotNull(message = "Province cannot be null")
+    private String province;
 
     @NotNull(message = "Country cannot be null")
     private String country;

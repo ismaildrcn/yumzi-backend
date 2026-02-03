@@ -23,11 +23,11 @@ public class DtoAddressResponse {
 
     private String addressLine2;
 
+    private String neighborhood;
+
     private String district;
 
-    private String city;
-
-    private String state;
+    private String province;
 
     private String country;
 
