@@ -26,4 +26,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Query("SELECT r FROM Restaurant r JOIN r.category c WHERE c.uniqueId = :categoryId")
     List<Restaurant> findRestaurantByCategoryId(UUID categoryId);
 
+    @Query("SELECT r FROM Restaurant r WHERE " +
+            "LOWER(r.name) LIKE LOWER(CONCAT('%', :keywords, '%')) OR " +
+            "LOWER(r.description) LIKE LOWER(CONCAT('%', :keywords, '%'))")
+    List<Restaurant> searchRestaurants(String keywords);
+
 }
