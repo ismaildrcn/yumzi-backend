@@ -18,4 +18,6 @@ public interface IRestRestaurantController {
     RootEntity<?> deleteRestaurantByUniqueId(UUID uniqueId);
 
     RootEntity<List<DtoRestaurantSummary>> getAllRestaurants();
+
+    RootEntity<List<DtoRestaurantSummary>> findRestaurantsByCategoryId(UUID categoryId);
 }

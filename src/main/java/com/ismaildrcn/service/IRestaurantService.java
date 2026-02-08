@@ -18,4 +18,6 @@ public interface IRestaurantService {
     void deleteRestaurantByUniqueId(UUID uniqueId);
 
     List<DtoRestaurantSummary> getAllRestaurants();
+
+    List<DtoRestaurantSummary> findRestaurantsByCategoryId(UUID categoryId);
 }

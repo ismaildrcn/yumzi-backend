@@ -64,4 +64,10 @@ public class RestRestaurantControllerImpl extends RestBaseController implements 
         return ok(restaurantService.getAllRestaurants());
     }
 
+    @Override
+    @GetMapping("/list/with-category/{categoryId}")
+    public RootEntity<List<DtoRestaurantSummary>> findRestaurantsByCategoryId(@PathVariable UUID categoryId) {
+        return ok(restaurantService.findRestaurantsByCategoryId(categoryId));
+    }
+
 }

@@ -39,6 +39,19 @@ public class RestaurantServiceImpl implements IRestaurantService {
     private RestaurantCuisineRepository restaurantCuisineRepository;
 
     @Override
+    public List<DtoRestaurantSummary> findRestaurantsByCategoryId(UUID categoryId) {
+        List<Restaurant> dbRestaurants = restaurantRepository.findRestaurantByCategoryId(categoryId).stream()
+                .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
+        List<DtoRestaurantSummary> response = new ArrayList<>();
+        for (Restaurant restaurant : dbRestaurants) {
+            DtoRestaurantSummary summary = new DtoRestaurantSummary();
+            BeanUtils.copyProperties(restaurant, summary);
+            response.add(summary);
+        }
+        return response;
+    }
+
+    @Override
     public void deleteRestaurantByUniqueId(UUID uniqueId) {
         Restaurant restaurantEntity = restaurantRepository.findByUniqueId(uniqueId).orElseThrow(
                 () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
