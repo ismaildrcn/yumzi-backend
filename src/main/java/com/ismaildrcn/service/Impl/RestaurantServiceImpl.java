@@ -1,6 +1,8 @@
 package com.ismaildrcn.service.Impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -14,6 +16,7 @@ import com.ismaildrcn.model.dto.DtoRestaurantCategoryResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantCuisineResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
+import com.ismaildrcn.model.dto.DtoRestaurantSummary;
 import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.RestaurantCategory;
 import com.ismaildrcn.model.entity.RestaurantCuisine;
@@ -74,6 +77,19 @@ public class RestaurantServiceImpl implements IRestaurantService {
         restaurantRepository.save(dbRestaurant);
 
         DtoRestaurantResponse response = convertToDto(dbRestaurant);
+        return response;
+    }
+
+    @Override
+    public List<DtoRestaurantSummary> getAllRestaurants() {
+        List<Restaurant> dbRestaurants = restaurantRepository.findAll().stream()
+                .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
+        List<DtoRestaurantSummary> response = new ArrayList<>();
+        for (Restaurant restaurant : dbRestaurants) {
+            DtoRestaurantSummary summary = new DtoRestaurantSummary();
+            BeanUtils.copyProperties(restaurant, summary);
+            response.add(summary);
+        }
         return response;
     }
 

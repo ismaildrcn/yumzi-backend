@@ -42,6 +42,9 @@ public class IRestaurantCategoryServiceImpl implements IRestaurantCategoryServic
         List<RestaurantCategory> categories = restaurantCategoryRepository.findAll(sort);
 
         for (RestaurantCategory category : categories) {
+            if (category.getDeletedAt() != null || category.getIsActive() == false) {
+                continue; // Silinmiş ve aktif olmayan kategorileri atla
+            }
             DtoRestaurantCategoryResponse dto = new DtoRestaurantCategoryResponse();
             BeanUtils.copyProperties(category, dto);
             response.add(dto);
