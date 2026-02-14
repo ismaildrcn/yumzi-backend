@@ -12,8 +12,10 @@ import com.ismaildrcn.model.dto.DtoRestaurantSummary;
 import com.ismaildrcn.model.dto.DtoSearchResponse;
 import com.ismaildrcn.model.entity.MenuItem;
 import com.ismaildrcn.model.entity.Restaurant;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.MenuItemRepository;
 import com.ismaildrcn.repository.RestaurantRepository;
+import com.ismaildrcn.service.IRecentSearchService;
 import com.ismaildrcn.service.ISearchService;
 
 @Service
@@ -25,15 +27,21 @@ public class SearchServiceImpl implements ISearchService {
     @Autowired
     private MenuItemRepository menuItemRepo;
 
-    @Override
-    public DtoSearchResponse search(String keyword) {
+    @Autowired
+    private IRecentSearchService recentSearchService;
 
+    @Override
+    public DtoSearchResponse search(User user, String keyword) {
+        keyword = keyword.toLowerCase();
         List<DtoRestaurantSummary> restaurants = searchByRestaurants(keyword);
         List<DtoMenuItemResponse> menuItems = searchByMenuItems(keyword);
         DtoSearchResponse response = new DtoSearchResponse();
 
+        response.setKeyword(keyword);
         response.setRestaurants(restaurants);
         response.setMenuItems(menuItems);
+
+        recentSearchService.addRecentSearch(user, response);
 
         return response;
     }

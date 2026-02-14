@@ -3,8 +3,8 @@ package com.ismaildrcn.service;
 import com.ismaildrcn.model.dto.DtoSearchResponse;
 import com.ismaildrcn.model.entity.User;
 
-public interface ISearchService {
+public interface IRecentSearchService {
 
-    DtoSearchResponse search(User user, String keyword);
+    void addRecentSearch(User user, DtoSearchResponse response);
 
 }

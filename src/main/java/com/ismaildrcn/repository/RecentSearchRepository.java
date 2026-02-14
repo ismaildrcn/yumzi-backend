@@ -8,4 +8,6 @@ import com.ismaildrcn.model.entity.RecentSearch;
 @Repository
 public interface RecentSearchRepository extends JpaRepository<RecentSearch, Long> {
 
+    RecentSearch findByKeywordAndUserId(String keyword, Long userId);
+
 }

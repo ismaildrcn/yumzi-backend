@@ -1,6 +1,7 @@
 package com.ismaildrcn.controller.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import com.ismaildrcn.controller.IRestSearchController;
 import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.DtoSearchResponse;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.service.ISearchService;
 
 @RestController
@@ -21,8 +23,8 @@ public class RestSearchControllerImpl extends RestBaseController implements IRes
 
     @Override
     @GetMapping("/search")
-    public RootEntity<DtoSearchResponse> search(@RequestParam String keyword) {
-        return ok(searchService.search(keyword));
+    public RootEntity<DtoSearchResponse> search(@AuthenticationPrincipal User user, @RequestParam String keyword) {
+        return ok(searchService.search(user, keyword));
     }
 
 }

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoSearchResponse {
 
+    private String keyword;
+
     private List<DtoRestaurantSummary> restaurants;
 
     private List<DtoMenuItemResponse> menuItems;
