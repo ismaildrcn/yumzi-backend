@@ -1,11 +1,8 @@
 package com.ismaildrcn.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Data;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RootEntity<T> {
 
     private Integer status;

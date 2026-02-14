@@ -3,6 +3,7 @@ package com.ismaildrcn.model.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -13,7 +14,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "recent_searches")
+@Table(name = "recent_searches", indexes = {
+        @Index(name = "idx_keyword", columnList = "keyword")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
