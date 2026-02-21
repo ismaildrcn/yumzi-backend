@@ -17,4 +17,6 @@ public interface IRestMenuItemController {
 
     RootEntity<?> deleteMenuItem(UUID restaurantId, UUID menuItemId);
 
+    RootEntity<List<DtoMenuItemResponse>> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId);
+
 }

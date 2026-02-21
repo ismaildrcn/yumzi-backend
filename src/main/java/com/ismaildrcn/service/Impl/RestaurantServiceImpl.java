@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
+import com.ismaildrcn.model.dto.DtoMenuCategoryResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantCategoryResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantCuisineResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantSummary;
+import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.RestaurantCategory;
 import com.ismaildrcn.model.entity.RestaurantCuisine;
@@ -110,12 +112,19 @@ public class RestaurantServiceImpl implements IRestaurantService {
         DtoRestaurantResponse response = new DtoRestaurantResponse();
         DtoRestaurantCategoryResponse categoryResponse = new DtoRestaurantCategoryResponse();
         DtoRestaurantCuisineResponse cuisineResponse = new DtoRestaurantCuisineResponse();
-
+        List<DtoMenuCategoryResponse> menuCategoryResponses = new ArrayList<>();
+        
+        for (MenuCategory menuCategory : restaurant.getMenuCategories()) {
+            DtoMenuCategoryResponse menuCategoryResponse = new DtoMenuCategoryResponse();
+            BeanUtils.copyProperties(menuCategory, menuCategoryResponse);
+            menuCategoryResponses.add(menuCategoryResponse);
+        }
         BeanUtils.copyProperties(restaurant, response);
         BeanUtils.copyProperties(restaurant.getCategory(), categoryResponse);
         BeanUtils.copyProperties(restaurant.getCuisine(), cuisineResponse);
         response.setCategory(categoryResponse);
         response.setCuisine(cuisineResponse);
+        response.setMenuCategories(menuCategoryResponses);
         return response;
     }
 

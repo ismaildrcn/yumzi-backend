@@ -31,4 +31,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
             "LOWER(m.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<MenuItem> searchMenuItems(String keyword);
 
+    // @Query("SELECT m FROM MenuItem m WHERE m.restaurant.uniqueId = :restaurantUniqueId AND m.category.uniqueId = :categoryUniqueId")
+    List<MenuItem> findByRestaurantUniqueIdAndCategoryUniqueId(UUID restaurantUniqueId, UUID categoryUniqueId);
+
 }

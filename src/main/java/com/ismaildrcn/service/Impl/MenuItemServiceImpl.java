@@ -81,7 +81,22 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
         menuItem.setDeletedAt(LocalDateTime.now());
         menuItemRepository.save(menuItem);
-        
+
+    }
+
+    @Override
+    public List<DtoMenuItemResponse> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId) {
+        List<MenuItem> menuItems = menuItemRepository.findByRestaurantUniqueIdAndCategoryUniqueId(restaurantId,
+                menuCategoryId);
+        if (menuItems.isEmpty()) {
+            return new ArrayList<>(); // Boş liste döndür
+        }
+        List<DtoMenuItemResponse> responseList = new ArrayList<>();
+        for (MenuItem menuItem : menuItems) {
+            DtoMenuItemResponse dtoMenuItemResponse = convertToDto(menuItem);
+            responseList.add(dtoMenuItemResponse);
+        }
+        return responseList;
     }
 
     private MenuItem createMenuItemFromRequest(UUID restaurantId, DtoMenuItemRequest request) {

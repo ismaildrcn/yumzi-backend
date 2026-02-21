@@ -57,4 +57,11 @@ public class RestMenuItemControllerImpl extends RestBaseController implements IR
         return ok("Menu item deleted successfully");
     }
 
+    @Override
+    @GetMapping("/{restaurantId}/menu-categories/{menuCategoryId}/menu-items")
+    public RootEntity<List<DtoMenuItemResponse>> findMenuItemsByMenuCategory(@PathVariable UUID restaurantId,
+            @PathVariable UUID menuCategoryId) {
+        return ok(menuItemService.findMenuItemsByMenuCategory(restaurantId, menuCategoryId));
+    }
+
 }
