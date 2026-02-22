@@ -64,4 +64,10 @@ public class RestMenuItemControllerImpl extends RestBaseController implements IR
         return ok(menuItemService.findMenuItemsByMenuCategory(restaurantId, menuCategoryId));
     }
 
+    @Override
+    @GetMapping("/menu-items/{menuItemId}")
+    public RootEntity<DtoMenuItemResponse> findMenuItemById(@PathVariable UUID menuItemId) {
+        return ok(menuItemService.findMenuItemById(menuItemId));
+    }
+
 }

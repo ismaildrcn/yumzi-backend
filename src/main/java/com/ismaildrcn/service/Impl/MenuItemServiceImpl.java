@@ -99,6 +99,15 @@ public class MenuItemServiceImpl implements IMenuItemService {
         return responseList;
     }
 
+    @Override
+    public DtoMenuItemResponse findMenuItemById(UUID menuItemId) {
+        MenuItem menuItem = menuItemRepository.findByUniqueId(menuItemId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Menu item with uniqueId: " + menuItemId + " not found.")));
+        DtoMenuItemResponse response = convertToDto(menuItem);
+        return response;
+    }
+
     private MenuItem createMenuItemFromRequest(UUID restaurantId, DtoMenuItemRequest request) {
         Restaurant restaurant = restaurantRepository.findByUniqueId(restaurantId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,

@@ -19,4 +19,6 @@ public interface IRestMenuItemController {
 
     RootEntity<List<DtoMenuItemResponse>> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId);
 
+    RootEntity<DtoMenuItemResponse> findMenuItemById(UUID menuItemId);
+
 }
