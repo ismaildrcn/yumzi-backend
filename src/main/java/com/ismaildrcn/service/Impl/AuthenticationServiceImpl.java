@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,7 +69,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             return new AuthResponse(accessToken, savedRefreshToken.getRefreshToken());
 
         } catch (Exception e) {
-            throw new BaseException(new ErrorMessage(MessageType.USERNAME_OR_PASSWORD_INVALID, e.getMessage()));
+            throw new BaseException(
+                    new ErrorMessage(MessageType.USERNAME_OR_PASSWORD_INVALID, null, HttpStatus.UNAUTHORIZED));
         }
     }
 
@@ -92,11 +94,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private User createUserFromDto(AuthRequest authRequest) {
         User user = new User();
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
 
         user.setEmail(authRequest.getEmail());
         user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        user.setFullName(authRequest.getFullName());
 
         return user;
     }

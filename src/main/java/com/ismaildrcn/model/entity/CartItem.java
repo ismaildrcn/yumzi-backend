@@ -1,69 +1,29 @@
 package com.ismaildrcn.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "cart_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class CartItem extends BaseEntity {
-    // Henuz siparis verilmemis sepetteki urunler
+public class CartItem implements Serializable {
+    // Sepetteki ürün (Redis'te Cart içinde embedded)
+    // MenuItem bilgilerine ihtiyaç duyulduğunda menuItemId ile DB'den çekilir
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    private UUID menuItemId; // MenuItem referansı (join yok, sadece ID)
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    // Snapshot: Sepete eklendiği andaki fiyatlar
     private BigDecimal unitPrice;
-
-    @Column(name = "discounted_unit_price", precision = 10, scale = 2)
     private BigDecimal discountedUnitPrice;
-
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @Column(name = "special_instructions", columnDefinition = "TEXT")
     private String specialInstructions;
-
-    @Column(name = "calories")
-    private Integer calories;
-
-    @Column(name = "is_vegetarian")
-    private Boolean isVegetarian = false;
-
-    @Column(name = "is_spicy")
-    private Boolean isSpicy = false;
-
-    @Column(name = "is_available")
-    private Boolean isAvailable = true;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_item_id", nullable = false)
-    private MenuItem menuItem;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id", nullable = false)
-    private Cart cart;
 
 }

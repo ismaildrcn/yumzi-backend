@@ -1,6 +1,7 @@
 package com.ismaildrcn.model.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import com.ismaildrcn.model.embeddable.OpeningHours;
@@ -60,6 +61,8 @@ public class DtoRestaurantResponse {
     private DtoRestaurantCategoryResponse category;
 
     private DtoRestaurantCuisineResponse cuisine;
+
+    private List<DtoMenuCategoryResponse> menuCategories;
 
     private Address address;
 

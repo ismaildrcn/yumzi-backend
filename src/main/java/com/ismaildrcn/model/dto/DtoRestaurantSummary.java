@@ -1,5 +1,6 @@
 package com.ismaildrcn.model.dto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.ismaildrcn.model.embeddable.OpeningHours;
@@ -23,6 +24,8 @@ public class DtoRestaurantSummary {
     private OpeningHours openingHours;
 
     private String deliveryTimeRange;
+
+    private BigDecimal deliveryFee;
 
     private Address address;
 

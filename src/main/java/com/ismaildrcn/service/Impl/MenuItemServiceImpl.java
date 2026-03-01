@@ -81,7 +81,31 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
         menuItem.setDeletedAt(LocalDateTime.now());
         menuItemRepository.save(menuItem);
-        
+
+    }
+
+    @Override
+    public List<DtoMenuItemResponse> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId) {
+        List<MenuItem> menuItems = menuItemRepository.findByRestaurantUniqueIdAndCategoryUniqueId(restaurantId,
+                menuCategoryId);
+        if (menuItems.isEmpty()) {
+            return new ArrayList<>(); // Boş liste döndür
+        }
+        List<DtoMenuItemResponse> responseList = new ArrayList<>();
+        for (MenuItem menuItem : menuItems) {
+            DtoMenuItemResponse dtoMenuItemResponse = convertToDto(menuItem);
+            responseList.add(dtoMenuItemResponse);
+        }
+        return responseList;
+    }
+
+    @Override
+    public DtoMenuItemResponse findMenuItemById(UUID menuItemId) {
+        MenuItem menuItem = menuItemRepository.findByUniqueId(menuItemId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                        "Menu item with uniqueId: " + menuItemId + " not found.")));
+        DtoMenuItemResponse response = convertToDto(menuItem);
+        return response;
     }
 
     private MenuItem createMenuItemFromRequest(UUID restaurantId, DtoMenuItemRequest request) {

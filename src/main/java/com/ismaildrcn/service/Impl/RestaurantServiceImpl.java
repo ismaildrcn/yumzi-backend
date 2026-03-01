@@ -1,6 +1,8 @@
 package com.ismaildrcn.service.Impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -10,10 +12,13 @@ import org.springframework.stereotype.Service;
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
+import com.ismaildrcn.model.dto.DtoMenuCategoryResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantCategoryResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantCuisineResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
+import com.ismaildrcn.model.dto.DtoRestaurantSummary;
+import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.RestaurantCategory;
 import com.ismaildrcn.model.entity.RestaurantCuisine;
@@ -34,6 +39,19 @@ public class RestaurantServiceImpl implements IRestaurantService {
 
     @Autowired
     private RestaurantCuisineRepository restaurantCuisineRepository;
+
+    @Override
+    public List<DtoRestaurantSummary> findRestaurantsByCategoryId(UUID categoryId) {
+        List<Restaurant> dbRestaurants = restaurantRepository.findRestaurantByCategoryId(categoryId).stream()
+                .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
+        List<DtoRestaurantSummary> response = new ArrayList<>();
+        for (Restaurant restaurant : dbRestaurants) {
+            DtoRestaurantSummary summary = new DtoRestaurantSummary();
+            BeanUtils.copyProperties(restaurant, summary);
+            response.add(summary);
+        }
+        return response;
+    }
 
     @Override
     public void deleteRestaurantByUniqueId(UUID uniqueId) {
@@ -77,16 +95,36 @@ public class RestaurantServiceImpl implements IRestaurantService {
         return response;
     }
 
+    @Override
+    public List<DtoRestaurantSummary> getAllRestaurants() {
+        List<Restaurant> dbRestaurants = restaurantRepository.findAll().stream()
+                .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
+        List<DtoRestaurantSummary> response = new ArrayList<>();
+        for (Restaurant restaurant : dbRestaurants) {
+            DtoRestaurantSummary summary = new DtoRestaurantSummary();
+            BeanUtils.copyProperties(restaurant, summary);
+            response.add(summary);
+        }
+        return response;
+    }
+
     private DtoRestaurantResponse convertToDto(Restaurant restaurant) {
         DtoRestaurantResponse response = new DtoRestaurantResponse();
         DtoRestaurantCategoryResponse categoryResponse = new DtoRestaurantCategoryResponse();
         DtoRestaurantCuisineResponse cuisineResponse = new DtoRestaurantCuisineResponse();
-
+        List<DtoMenuCategoryResponse> menuCategoryResponses = new ArrayList<>();
+        
+        for (MenuCategory menuCategory : restaurant.getMenuCategories()) {
+            DtoMenuCategoryResponse menuCategoryResponse = new DtoMenuCategoryResponse();
+            BeanUtils.copyProperties(menuCategory, menuCategoryResponse);
+            menuCategoryResponses.add(menuCategoryResponse);
+        }
         BeanUtils.copyProperties(restaurant, response);
         BeanUtils.copyProperties(restaurant.getCategory(), categoryResponse);
         BeanUtils.copyProperties(restaurant.getCuisine(), cuisineResponse);
         response.setCategory(categoryResponse);
         response.setCuisine(cuisineResponse);
+        response.setMenuCategories(menuCategoryResponses);
         return response;
     }
 

@@ -1,14 +1,13 @@
 package com.ismaildrcn.controller;
 
-import java.util.UUID;
-
 import com.ismaildrcn.model.dto.DtoUserRequest;
+import com.ismaildrcn.model.entity.User;
 
 public interface IRestUserController {
 
-    public RootEntity<?> updateUserByUniqueId(UUID uniqueId, DtoUserRequest dtoUserRequest);
+    public RootEntity<?> updateUser(User user, DtoUserRequest dtoUserRequest);
 
-    public RootEntity<?> getUserByUniqueId(UUID uniqueId);
+    public RootEntity<?> getUser(User user);
 
-    public RootEntity<?> deleteUserByUniqueId(UUID uniqueId);
+    public RootEntity<?> deleteUser(User user);
 }

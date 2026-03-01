@@ -17,6 +17,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -110,6 +112,10 @@ public class Restaurant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cuisine_id")
     private RestaurantCuisine cuisine;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "restaurant_menu_categories", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
+    private List<MenuCategory> menuCategories;
 
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;

@@ -15,21 +15,24 @@ import com.ismaildrcn.model.entity.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-        @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :uniqueId AND a.deletedAt IS NULL ORDER BY a.isDefault DESC")
-        List<Address> findAllAddressByUniqueId(UUID uniqueId);
+  @Query("SELECT a FROM Address a WHERE a.user.id = :id AND a.deletedAt IS NULL ORDER BY a.isDefault DESC")
+  List<Address> findAllAddressById(Long id);
 
-        @Query("SELECT a FROM Address a WHERE a.uniqueId = :uniqueId AND a.deletedAt IS NULL")
-        Optional<Address> findByUniqueId(UUID uniqueId);
+  @Query("SELECT a FROM Address a WHERE a.uniqueId = :uniqueId AND a.deletedAt IS NULL")
+  Optional<Address> findByUniqueId(UUID uniqueId);
 
-        @Modifying
-        @Query("""
-                            UPDATE Address a
-                            SET a.isDefault = false
-                            WHERE a.user.uniqueId = :userId
-                              AND a.uniqueId <> :addressId
-                        """)
-        void unsetOtherDefaults(
-                        @Param("userId") UUID userId,
-                        @Param("addressId") UUID addressId);
+  @Query("SELECT a FROM Address a WHERE a.user.uniqueId = :userId AND a.isDefault = true AND a.deletedAt IS NULL")
+  Optional<Address> findDefaultAddressByUser(@Param("userId") UUID userId);
+
+  @Modifying
+  @Query("""
+          UPDATE Address a
+          SET a.isDefault = false
+          WHERE a.user.uniqueId = :userId
+            AND a.uniqueId <> :addressId
+      """)
+  void unsetOtherDefaults(
+      @Param("userId") UUID userId,
+      @Param("addressId") UUID addressId);
 
 }

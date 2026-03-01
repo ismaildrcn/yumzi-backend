@@ -12,18 +12,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.ismaildrcn.exception.BaseException;
 import com.ismaildrcn.exception.ErrorMessage;
 import com.ismaildrcn.exception.MessageType;
+import com.ismaildrcn.interceptor.RequestLoggingInterceptor;
 import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.UserRepository;
 
 @Configuration
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RequestLoggingInterceptor requestLoggingInterceptor;
 
     @Bean
     UserDetailsService userDetailsService() {
@@ -54,6 +60,13 @@ public class AppConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(requestLoggingInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/swagger-ui/**", "/v3/api-docs/**");
     }
 
 }

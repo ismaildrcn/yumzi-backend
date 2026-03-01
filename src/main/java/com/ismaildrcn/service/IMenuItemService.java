@@ -16,4 +16,7 @@ public interface IMenuItemService {
 
     void deleteMenuItem(UUID restaurantId, UUID menuItemId);
 
+    List<DtoMenuItemResponse> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId);
+
+    DtoMenuItemResponse findMenuItemById(UUID menuItemId);
 }
