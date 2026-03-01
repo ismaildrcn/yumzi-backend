@@ -71,7 +71,7 @@ public class CartServiceImpl implements ICartService {
         CartItem cartItem = createCartItemFromMenuItem(menuItem, request);
         userCart.getCartItems().add(cartItem);
         userCart.setRestaurantId(menuItem.getRestaurant().getUniqueId());
-
+        userCart.setTtl(7200L); // her yeni eklenen ürünle TTL'yi 2 saat olarak güncelle
         userCart = totalCartAmount(userCart);
         cartRepository.save(userCart);
         return cartItem;
