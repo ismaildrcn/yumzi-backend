@@ -2,6 +2,8 @@ package com.ismaildrcn.service.Impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,26 +44,35 @@ public class CartServiceImpl implements ICartService {
                 .orElseThrow(() -> new BaseException(
                         new ErrorMessage(MessageType.NO_RECORD_FOUND)));
         Cart userCart = getUserCartFromCache(user);
-        CartItem cartItem = createCartItemFromMenuItem(menuItem, request);
-        userCart.getCartItems().add(cartItem);
+        List<CartItem> cartItems = userCart.getCartItems();
 
-        // Toplam hesaplama (fiyatlar zaten vergi dahil)
-        BigDecimal totalWithTax = BigDecimal.ZERO;
-        for (CartItem item : userCart.getCartItems()) {
-            totalWithTax = totalWithTax.add(item.getTotalPrice());
+        if (!cartItems.isEmpty() && !userCart.getRestaurantId().equals(menuItem.getRestaurant().getUniqueId())) {
+            throw new BaseException(new ErrorMessage(MessageType.VALIDATION_ERROR,
+                    "You can only add items from the same restaurant to the cart."));
         }
 
-        // Vergi dahil fiyattan vergi miktarını hesapla
-        // totalWithTax = vergisiz * 1.01
-        // vergisiz = totalWithTax / 1.01
-        BigDecimal subTotal = totalWithTax.divide(new BigDecimal("1.01"), 2, RoundingMode.HALF_UP);
-        BigDecimal taxAmount = totalWithTax.subtract(subTotal);
+        if (!cartItems.isEmpty()) {
+            for (CartItem item : cartItems) {
+                if (item.getMenuItemId().equals(menuItem.getUniqueId())) {
+                    item.setQuantity(item.getQuantity() + request.getQuantity());
+                    if (menuItem.getDiscountPrice() != null) {
+                        item.setTotalPrice(item.getDiscountedUnitPrice().multiply(
+                                BigDecimal.valueOf(item.getQuantity())));
+                    } else {
+                        item.setTotalPrice(item.getUnitPrice().multiply(
+                                BigDecimal.valueOf(item.getQuantity())));
+                    }
+                    cartRepository.save(userCart);
+                    return item;
+                }
+            }
+        }
 
-        userCart.setSubTotal(subTotal); // Vergisiz tutar (backend için)
-        userCart.setTaxAmount(taxAmount); // Vergi tutarı (backend için)
-        userCart.setTotalAmount(totalWithTax); // Vergi dahil toplam (kullanıcının ödeyeceği)
+        CartItem cartItem = createCartItemFromMenuItem(menuItem, request);
+        userCart.getCartItems().add(cartItem);
         userCart.setRestaurantId(menuItem.getRestaurant().getUniqueId());
 
+        userCart = totalCartAmount(userCart);
         cartRepository.save(userCart);
         return cartItem;
     }
@@ -86,6 +97,40 @@ public class CartServiceImpl implements ICartService {
         }
         response.setRestaurant(dtoRestaurant);
         return response;
+    }
+
+    @Override
+    public boolean removeCartItem(User user, UUID menuItemId) {
+        Cart userCart = getUserCartFromCache(user);
+        List<CartItem> cartItems = userCart.getCartItems();
+
+        boolean removed = cartItems.removeIf(item -> item.getMenuItemId().equals(menuItemId));
+        userCart = totalCartAmount(userCart);
+        cartRepository.save(userCart);
+        return removed;
+    }
+
+    @Override
+    public DtoCartResponse updateMenuItemQuantity(User user, DtoCartItemRequest request) {
+        Cart userCart = getUserCartFromCache(user);
+        List<CartItem> cartItems = userCart.getCartItems();
+
+        for (CartItem item : cartItems) {
+            if (item.getMenuItemId().equals(request.getMenuItemId())) {
+                item.setQuantity(request.getQuantity());
+                if (item.getDiscountedUnitPrice() != null) {
+                    item.setTotalPrice(item.getDiscountedUnitPrice().multiply(
+                            BigDecimal.valueOf(item.getQuantity())));
+                } else {
+                    item.setTotalPrice(item.getUnitPrice().multiply(
+                            BigDecimal.valueOf(item.getQuantity())));
+                }
+                break;
+            }
+        }
+        userCart = totalCartAmount(userCart);
+        cartRepository.save(userCart);
+        return getUserCart(user);
     }
 
     private CartItem createCartItemFromMenuItem(MenuItem menuItem, DtoCartItemRequest request) {
@@ -115,6 +160,25 @@ public class CartServiceImpl implements ICartService {
                     newCart.setUserId(user.getUniqueId());
                     return newCart;
                 });
+    }
+
+    private Cart totalCartAmount(Cart userCart) {
+        // Toplam hesaplama (fiyatlar zaten vergi dahil)
+        BigDecimal totalWithTax = BigDecimal.ZERO;
+        for (CartItem item : userCart.getCartItems()) {
+            totalWithTax = totalWithTax.add(item.getTotalPrice());
+        }
+
+        // Vergi dahil fiyattan vergi miktarını hesapla
+        // totalWithTax = vergisiz * 1.01
+        // vergisiz = totalWithTax / 1.01
+        BigDecimal subTotal = totalWithTax.divide(new BigDecimal("1.01"), 2, RoundingMode.HALF_UP);
+        BigDecimal taxAmount = totalWithTax.subtract(subTotal);
+
+        userCart.setSubTotal(subTotal); // Vergisiz tutar (backend için)
+        userCart.setTaxAmount(taxAmount); // Vergi tutarı (backend için)
+        userCart.setTotalAmount(totalWithTax); // Vergi dahil toplam (kullanıcının ödeyeceği)
+        return userCart;
     }
 
 }

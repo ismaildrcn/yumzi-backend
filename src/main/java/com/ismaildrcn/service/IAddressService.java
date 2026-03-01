@@ -20,4 +20,6 @@ public interface IAddressService {
 
     public void deleteAddressByUniqueId(UUID uniqueId);
 
+    public DtoAddressResponse findDefaultAddressByUser(User user);
+
 }

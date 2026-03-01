@@ -12,6 +12,7 @@ public enum MessageType {
     REFRESH_TOKEN_NOT_FOUND("1005", "Refresh token not found."),
     REFRESH_TOKEN_IS_EXPIRED("1006", "The refresh token has expired."),
     ALREADY_EXISTS_RECORD("1007", "The record already exists."),
+    VALIDATION_ERROR("1008", "Validation error."),
     GENERAL_EXCEPTION("9999", "An error occurred while processing your request.");
 
     private String code;

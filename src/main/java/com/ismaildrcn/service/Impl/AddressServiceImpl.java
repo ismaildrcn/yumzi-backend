@@ -90,6 +90,17 @@ public class AddressServiceImpl implements IAddressService {
         addressRepository.save(address);
     }
 
+    @Override
+    public DtoAddressResponse findDefaultAddressByUser(User user) {
+        Address defaultAddress = addressRepository.findDefaultAddressByUser(user.getUniqueId()).orElseThrow(
+                () -> new BaseException(
+                        new ErrorMessage(MessageType.NO_RECORD_FOUND,
+                                "Default Address for User Id: " + user.getUniqueId())));
+        DtoAddressResponse dtoAddressResponse = new DtoAddressResponse();
+        BeanUtils.copyProperties(defaultAddress, dtoAddressResponse);
+        return dtoAddressResponse;
+    }
+
     private Address getAddressEntityByUniqueId(UUID uniqueId) {
         return addressRepository.findByUniqueId(uniqueId).orElseThrow(() -> new BaseException(
                 new ErrorMessage(MessageType.NO_RECORD_FOUND, "Address Id: " + uniqueId)));

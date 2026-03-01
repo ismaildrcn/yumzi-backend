@@ -19,4 +19,6 @@ public interface IRestAddressController {
 
         public RootEntity<String> deleteAddressByUniqueId(UUID uniqueId);
 
+        public RootEntity<DtoAddressResponse> findDefaultAddressByUser(User user);
+
 }

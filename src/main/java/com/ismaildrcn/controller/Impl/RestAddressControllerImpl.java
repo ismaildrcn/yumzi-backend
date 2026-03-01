@@ -57,4 +57,10 @@ public class RestAddressControllerImpl extends RestBaseController implements IRe
         return ok("Deletion successful.");
     }
 
+    @Override
+    @GetMapping("/default")
+    public RootEntity<DtoAddressResponse> findDefaultAddressByUser(@AuthenticationPrincipal User user) {
+        return ok(addressService.findDefaultAddressByUser(user));
+    }
+
 }
