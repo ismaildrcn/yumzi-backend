@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +19,7 @@ import com.ismaildrcn.controller.RestBaseController;
 import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.DtoMenuItemRequest;
 import com.ismaildrcn.model.dto.DtoMenuItemResponse;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.service.IMenuItemService;
 
 import jakarta.validation.Valid;
@@ -66,8 +68,9 @@ public class RestMenuItemControllerImpl extends RestBaseController implements IR
 
     @Override
     @GetMapping("/menu-items/{menuItemId}")
-    public RootEntity<DtoMenuItemResponse> findMenuItemById(@PathVariable UUID menuItemId) {
-        return ok(menuItemService.findMenuItemById(menuItemId));
+    public RootEntity<DtoMenuItemResponse> findMenuItemById(@AuthenticationPrincipal User user,
+            @PathVariable UUID menuItemId) {
+        return ok(menuItemService.findMenuItemById(user, menuItemId));
     }
 
 }

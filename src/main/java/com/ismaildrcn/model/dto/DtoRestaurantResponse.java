@@ -58,6 +58,8 @@ public class DtoRestaurantResponse {
 
     private String taxNumber;
 
+    private boolean isFavorite = false;
+
     private DtoRestaurantCategoryResponse category;
 
     private DtoRestaurantCuisineResponse cuisine;

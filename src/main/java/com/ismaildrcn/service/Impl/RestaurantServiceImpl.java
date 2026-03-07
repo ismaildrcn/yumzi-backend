@@ -2,7 +2,9 @@ package com.ismaildrcn.service.Impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -22,14 +24,19 @@ import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.RestaurantCategory;
 import com.ismaildrcn.model.entity.RestaurantCuisine;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.RestaurantCategoryRepository;
 import com.ismaildrcn.repository.RestaurantCuisineRepository;
 import com.ismaildrcn.repository.RestaurantRepository;
+import com.ismaildrcn.repository.UserRepository;
 import com.ismaildrcn.service.IRestaurantService;
 import com.ismaildrcn.utils.SlugUtils;
 
 @Service
 public class RestaurantServiceImpl implements IRestaurantService {
+
+    @Autowired
+    private UserRepository userRepo;
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -41,13 +48,21 @@ public class RestaurantServiceImpl implements IRestaurantService {
     private RestaurantCuisineRepository restaurantCuisineRepository;
 
     @Override
-    public List<DtoRestaurantSummary> findRestaurantsByCategoryId(UUID categoryId) {
+    public List<DtoRestaurantSummary> findRestaurantsByCategoryId(User user, UUID categoryId) {
+        Set<UUID> favoriteRestaurantIds = new HashSet<>();
+        if (user != null) {
+            favoriteRestaurantIds = userRepo.findFavoriteRestaurantIds(user.getId());
+        }
+
         List<Restaurant> dbRestaurants = restaurantRepository.findRestaurantByCategoryId(categoryId).stream()
                 .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
         List<DtoRestaurantSummary> response = new ArrayList<>();
         for (Restaurant restaurant : dbRestaurants) {
             DtoRestaurantSummary summary = new DtoRestaurantSummary();
             BeanUtils.copyProperties(restaurant, summary);
+            if (favoriteRestaurantIds.contains(restaurant.getUniqueId())) {
+                summary.setFavorite(true);
+            }
             response.add(summary);
         }
         return response;
@@ -64,11 +79,19 @@ public class RestaurantServiceImpl implements IRestaurantService {
     }
 
     @Override
-    public DtoRestaurantResponse getRestaurantByUniqueId(UUID uniqueId) {
+    public DtoRestaurantResponse getRestaurantByUniqueId(User user, UUID uniqueId) {
         Restaurant restaurantEntity = restaurantRepository.findByUniqueId(uniqueId).orElseThrow(
                 () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
                         "Restaurant with uniqueId " + uniqueId + " not found.")));
+
+        Set<UUID> favoriteRestaurantIds = new HashSet<>();
+        if (user != null) {
+            favoriteRestaurantIds = userRepo.findFavoriteRestaurantIds(user.getId());
+        }
         DtoRestaurantResponse response = convertToDto(restaurantEntity);
+        if (favoriteRestaurantIds.contains(restaurantEntity.getUniqueId())) {
+            response.setFavorite(true);
+        }
         return response;
     }
 
@@ -96,13 +119,24 @@ public class RestaurantServiceImpl implements IRestaurantService {
     }
 
     @Override
-    public List<DtoRestaurantSummary> getAllRestaurants() {
+    public List<DtoRestaurantSummary> getAllRestaurants(User user) {
+        Set<UUID> favoriteRestaurantIds = new HashSet<>();
+        if (user != null) {
+            favoriteRestaurantIds = userRepo.findFavoriteRestaurantIds(user.getId());
+        }
+
         List<Restaurant> dbRestaurants = restaurantRepository.findAll().stream()
                 .filter(restaurant -> restaurant.getDeletedAt() == null).toList();
+
         List<DtoRestaurantSummary> response = new ArrayList<>();
+
         for (Restaurant restaurant : dbRestaurants) {
             DtoRestaurantSummary summary = new DtoRestaurantSummary();
             BeanUtils.copyProperties(restaurant, summary);
+
+            if (favoriteRestaurantIds.contains(restaurant.getUniqueId())) {
+                summary.setFavorite(true);
+            }
             response.add(summary);
         }
         return response;
@@ -113,7 +147,7 @@ public class RestaurantServiceImpl implements IRestaurantService {
         DtoRestaurantCategoryResponse categoryResponse = new DtoRestaurantCategoryResponse();
         DtoRestaurantCuisineResponse cuisineResponse = new DtoRestaurantCuisineResponse();
         List<DtoMenuCategoryResponse> menuCategoryResponses = new ArrayList<>();
-        
+
         for (MenuCategory menuCategory : restaurant.getMenuCategories()) {
             DtoMenuCategoryResponse menuCategoryResponse = new DtoMenuCategoryResponse();
             BeanUtils.copyProperties(menuCategory, menuCategoryResponse);

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import com.ismaildrcn.controller.RootEntity;
 import com.ismaildrcn.model.dto.DtoRestaurantRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantSummary;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.service.IRestaurantService;
 
 import jakarta.validation.Valid;
@@ -39,8 +41,9 @@ public class RestRestaurantControllerImpl extends RestBaseController implements 
 
     @Override
     @GetMapping("/{uniqueId}")
-    public RootEntity<DtoRestaurantResponse> getRestaurantByUniqueId(@PathVariable UUID uniqueId) {
-        return ok(restaurantService.getRestaurantByUniqueId(uniqueId));
+    public RootEntity<DtoRestaurantResponse> getRestaurantByUniqueId(@AuthenticationPrincipal User user,
+            @PathVariable UUID uniqueId) {
+        return ok(restaurantService.getRestaurantByUniqueId(user, uniqueId));
     }
 
     @Override
@@ -60,14 +63,14 @@ public class RestRestaurantControllerImpl extends RestBaseController implements 
     @Override
     @GetMapping("/all-summary")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public RootEntity<List<DtoRestaurantSummary>> getAllRestaurants() {
-        return ok(restaurantService.getAllRestaurants());
+    public RootEntity<List<DtoRestaurantSummary>> getAllRestaurants(@AuthenticationPrincipal User user) {
+        return ok(restaurantService.getAllRestaurants(user));
     }
 
     @Override
     @GetMapping("/list/with-category/{categoryId}")
-    public RootEntity<List<DtoRestaurantSummary>> findRestaurantsByCategoryId(@PathVariable UUID categoryId) {
-        return ok(restaurantService.findRestaurantsByCategoryId(categoryId));
+    public RootEntity<List<DtoRestaurantSummary>> findRestaurantsByCategoryId(@AuthenticationPrincipal User user, @PathVariable UUID categoryId) {
+        return ok(restaurantService.findRestaurantsByCategoryId(user, categoryId));
     }
 
 }

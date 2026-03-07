@@ -3,6 +3,7 @@ package com.ismaildrcn.service.Impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -19,14 +20,19 @@ import com.ismaildrcn.model.dto.DtoRestaurantSummary;
 import com.ismaildrcn.model.entity.MenuCategory;
 import com.ismaildrcn.model.entity.MenuItem;
 import com.ismaildrcn.model.entity.Restaurant;
+import com.ismaildrcn.model.entity.User;
 import com.ismaildrcn.repository.MenuCategoryRepository;
 import com.ismaildrcn.repository.MenuItemRepository;
 import com.ismaildrcn.repository.RestaurantRepository;
+import com.ismaildrcn.repository.UserRepository;
 import com.ismaildrcn.service.IMenuItemService;
 import com.ismaildrcn.utils.SlugUtils;
 
 @Service
 public class MenuItemServiceImpl implements IMenuItemService {
+
+    @Autowired
+    private UserRepository userRepo;
 
     @Autowired
     private MenuItemRepository menuItemRepository;
@@ -100,11 +106,15 @@ public class MenuItemServiceImpl implements IMenuItemService {
     }
 
     @Override
-    public DtoMenuItemResponse findMenuItemById(UUID menuItemId) {
+    public DtoMenuItemResponse findMenuItemById(User user, UUID menuItemId) {
+        Set<UUID> favoriteMenuItemIds = userRepo.findFavoriteMenuItemIds(user.getId());
         MenuItem menuItem = menuItemRepository.findByUniqueId(menuItemId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_FOUND,
                         "Menu item with uniqueId: " + menuItemId + " not found.")));
         DtoMenuItemResponse response = convertToDto(menuItem);
+        if (favoriteMenuItemIds.contains(menuItemId)) {
+            response.setFavorite(true);
+        }
         return response;
     }
 

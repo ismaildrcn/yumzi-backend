@@ -6,18 +6,19 @@ import java.util.UUID;
 import com.ismaildrcn.model.dto.DtoRestaurantRequest;
 import com.ismaildrcn.model.dto.DtoRestaurantResponse;
 import com.ismaildrcn.model.dto.DtoRestaurantSummary;
+import com.ismaildrcn.model.entity.User;
 
 public interface IRestaurantService {
 
     DtoRestaurantResponse saveRestaurant(DtoRestaurantRequest request);
 
-    DtoRestaurantResponse getRestaurantByUniqueId(UUID uniqueId);
+    DtoRestaurantResponse getRestaurantByUniqueId(User user, UUID uniqueId);
 
     DtoRestaurantResponse updateRestaurantByUniqueId(UUID uniqueId, DtoRestaurantRequest request);
 
     void deleteRestaurantByUniqueId(UUID uniqueId);
 
-    List<DtoRestaurantSummary> getAllRestaurants();
+    List<DtoRestaurantSummary> getAllRestaurants(User user);
 
-    List<DtoRestaurantSummary> findRestaurantsByCategoryId(UUID categoryId);
+    List<DtoRestaurantSummary> findRestaurantsByCategoryId(User user, UUID categoryId);
 }

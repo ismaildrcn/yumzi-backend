@@ -36,4 +36,5 @@ public class DtoMenuItemSummary {
 
     private String thumbnailUrl;
 
+    private boolean isFavorite = false;
 }

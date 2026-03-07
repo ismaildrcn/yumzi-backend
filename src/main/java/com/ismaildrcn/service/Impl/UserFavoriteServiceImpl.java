@@ -93,12 +93,14 @@ public class UserFavoriteServiceImpl implements IUserFavoriteService {
         userEntity.getFavoriteItems().forEach(menuItem -> {
             DtoMenuItemSummary menuItemResponse = new DtoMenuItemSummary();
             BeanUtils.copyProperties(menuItem, menuItemResponse);
+            menuItemResponse.setFavorite(true);
             response.getFavoriteItems().add(menuItemResponse);
         });
 
         userEntity.getFavoriteRestaurants().forEach(restaurant -> {
             DtoRestaurantSummary restaurantResponse = new DtoRestaurantSummary();
             BeanUtils.copyProperties(restaurant, restaurantResponse);
+            restaurantResponse.setFavorite(true);
             response.getFavoriteRestaurants().add(restaurantResponse);
         });
 

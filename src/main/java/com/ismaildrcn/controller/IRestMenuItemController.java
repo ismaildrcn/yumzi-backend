@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.ismaildrcn.model.dto.DtoMenuItemRequest;
 import com.ismaildrcn.model.dto.DtoMenuItemResponse;
+import com.ismaildrcn.model.entity.User;
 
 public interface IRestMenuItemController {
 
@@ -19,6 +20,6 @@ public interface IRestMenuItemController {
 
     RootEntity<List<DtoMenuItemResponse>> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId);
 
-    RootEntity<DtoMenuItemResponse> findMenuItemById(UUID menuItemId);
+    RootEntity<DtoMenuItemResponse> findMenuItemById(User user, UUID menuItemId);
 
 }

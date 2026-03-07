@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.ismaildrcn.model.dto.DtoMenuItemRequest;
 import com.ismaildrcn.model.dto.DtoMenuItemResponse;
+import com.ismaildrcn.model.entity.User;
 
 public interface IMenuItemService {
 
@@ -18,5 +19,5 @@ public interface IMenuItemService {
 
     List<DtoMenuItemResponse> findMenuItemsByMenuCategory(UUID restaurantId, UUID menuCategoryId);
 
-    DtoMenuItemResponse findMenuItemById(UUID menuItemId);
+    DtoMenuItemResponse findMenuItemById(User user, UUID menuItemId);
 }

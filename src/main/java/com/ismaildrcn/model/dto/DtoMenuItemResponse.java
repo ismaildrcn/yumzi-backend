@@ -75,6 +75,8 @@ public class DtoMenuItemResponse {
 
     private Integer reviewCount;
 
+    private boolean isFavorite = false;
+
     private DtoRestaurantSummary restaurant;
 
     private DtoMenuCategoryResponse category;

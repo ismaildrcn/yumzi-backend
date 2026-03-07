@@ -33,4 +33,6 @@ public class DtoRestaurantSummary {
 
     private String coverImageUrl;
 
+    private boolean isFavorite = false;
+
 }
