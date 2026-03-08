@@ -1,4 +1,4 @@
-package com.ismaildrcn.repository;
+package com.ismaildrcn.repository.redis;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

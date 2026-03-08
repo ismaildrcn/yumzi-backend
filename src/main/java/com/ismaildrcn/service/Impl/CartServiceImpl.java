@@ -20,9 +20,9 @@ import com.ismaildrcn.model.entity.CartItem;
 import com.ismaildrcn.model.entity.MenuItem;
 import com.ismaildrcn.model.entity.Restaurant;
 import com.ismaildrcn.model.entity.User;
-import com.ismaildrcn.repository.CartRepository;
 import com.ismaildrcn.repository.MenuItemRepository;
 import com.ismaildrcn.repository.RestaurantRepository;
+import com.ismaildrcn.repository.redis.CartRepository;
 import com.ismaildrcn.service.ICartService;
 
 @Service

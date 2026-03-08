@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users", indexes = {
-        @Index(name = "idx_users_user_unique_id", columnList = "user_unique_id")
+        @Index(name = "idx_users_user_unique_id", columnList = "unique_id")
 })
 @Data
 @AllArgsConstructor

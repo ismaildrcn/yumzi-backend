@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
-@EnableRedisRepositories(basePackages = "com.ismaildrcn.repository")
+@EnableRedisRepositories(basePackages = "com.ismaildrcn.repository.redis")
 public class RedisConfig {
 
     @Value("${spring.redis.host:localhost}")

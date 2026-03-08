@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "addresses", indexes = {
         @Index(name = "idx_addresses_user_id", columnList = "user_id"),
         @Index(name = "idx_addresses_restaurant_id", columnList = "restaurant_id"),
-        @Index(name = "idx_addresses_unique_id", columnList = "address_unique_id")
+        @Index(name = "idx_addresses_unique_id", columnList = "unique_id")
 })
 @Data
 @AllArgsConstructor
